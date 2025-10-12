@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { PUBLIC_ROUTES } from "../constants";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -39,18 +40,18 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log("Supabase user", user);
-
-  // TODO: Update this to check for public vs protected routes
   if (
     !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth") &&
-    !request.nextUrl.pathname.startsWith("/error")
+    request.nextUrl.pathname !== "/" &&
+    !PUBLIC_ROUTES.some((route) => request.nextUrl.pathname.startsWith(route))
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "auth/login";
+    url.searchParams.set(
+      "redirect_to",
+      request.nextUrl.pathname + request.nextUrl.search,
+    );
     return NextResponse.redirect(url);
   }
 

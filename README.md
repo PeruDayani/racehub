@@ -42,9 +42,11 @@ Src: https://supabase.com/docs/guides/auth
 
 Overview
 - JWTs for Authentication
-- These JWTs are automatically send when using Supabase Data API, enabling RLS.
-
-
+- JWT is stored in the cookie
+- Cookie is stored on the client side browser
+- Cookie is send to the server with every request
+- Cookie is authenticated and refreshed by the middleware
+- supabase.getUser() is the best authentication as it hits the database.
 
 - https://github.com/supabase/supabase/issues/19883#issuecomment-2094656180
 - https://supabase.com/docs/guides/auth/managing-user-data#using-triggers
@@ -55,7 +57,6 @@ TODO:
 - https://orm.drizzle.team/docs/rls#using-with-supabase
 
 ### Okay, up next
-- Setup Supabase Auth
 - Middlewear to protect (protected) routes, all (public) routes are public
 - Sign in modals from supabase ui or something
 - client and server side supabase user auth tokens.
