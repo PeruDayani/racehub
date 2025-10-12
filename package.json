@@ -10,6 +10,8 @@
     "migrate": "npx drizzle-kit generate && npx drizzle-kit migrate"
   },
   "dependencies": {
+    "@mantine/core": "^8.3.4",
+    "@mantine/hooks": "^8.3.4",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.75.0",
     "dotenv": "^17.2.3",
@@ -26,7 +28,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.5",
-    "tailwindcss": "^4",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
     "tsx": "^4.20.6",
     "typescript": "^5"
   }
