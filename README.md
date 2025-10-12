@@ -36,7 +36,33 @@ Schema & Migrations
 - Generate a migration using `npx drizzle-kit generate`
 - Apply the migration using `npx drizzle-kit migrate`
 
+### Supabase User Auth
+
+Src: https://supabase.com/docs/guides/auth
+
+Overview
+- JWTs for Authentication
+- These JWTs are automatically send when using Supabase Data API, enabling RLS.
+
+
+
+- https://github.com/supabase/supabase/issues/19883#issuecomment-2094656180
+- https://supabase.com/docs/guides/auth/managing-user-data#using-triggers
 
 TODO:
 - How to deploy migrations safely?
 - How to define RLS for Supabase?
+- https://orm.drizzle.team/docs/rls#using-with-supabase
+
+### Okay, up next
+- Setup Supabase Auth
+- Middlewear to protect (protected) routes, all (public) routes are public
+- Sign in modals from supabase ui or something
+- client and server side supabase user auth tokens.
+- that should be enough to get us up and running with auth.
+- and it's already making a lot more sense doing it step by step.
+
+- Understand the different ways of calling supabase
+- via Drizzle? we handle auth?
+- via js lib? RLS handle auth?
+- depending on these two things we will proceed.
