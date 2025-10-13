@@ -9,7 +9,7 @@ if (!databaseUrl) {
 }
 
 // Create a postgres connection
-const client = postgres(databaseUrl);
+const client = postgres(databaseUrl, { prepare: false });
 
 // Create a drizzle instance
 export const db = drizzle(client, { schema });
