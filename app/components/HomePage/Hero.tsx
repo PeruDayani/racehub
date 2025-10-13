@@ -71,7 +71,7 @@ export default function Hero() {
               leftSection={<Users size={20} />}
               className={styles.shadowButton}
               component="a"
-              href="/my-races"
+              href="/dashboard"
             >
               Organize a Race
             </Button>

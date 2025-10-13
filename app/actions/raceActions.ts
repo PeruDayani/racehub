@@ -2,7 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { races } from "../../drizzle/schema";
+import { addresses, races } from "../../drizzle/schema";
 import { db } from "../lib/db";
 import type { Race } from "../lib/types";
 import { getAuthenticatedUser } from "./utils";
@@ -180,12 +180,94 @@ type UpdateRaceResponseType = {
 };
 
 export async function updateRaceAction(
-  _race: Race,
+  race: Race,
 ): Promise<UpdateRaceResponseType> {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user) return { success: false, message: "User not authenticated" };
 
-  return {
-    success: false,
-    message: "Function not implemented",
+    const existingRace = await db.query.races.findFirst({
+      where: and(eq(races.id, race.id), eq(races.userId, user.id)),
+    });
+
+    if (!existingRace) {
+      return {
+        success: false,
+        message: "Race not found or you don't have permission to update it",
+      };
+    }
+
+    const addressId = await upsertAddress(race.address, existingRace.addressId);
+
+    await db
+      .update(races)
+      .set({
+        name: race.name,
+        date: race.date,
+        registrationDeadline: race.registrationDeadline,
+        status: race.status,
+        addressId,
+        updatedAt: new Date().toISOString(),
+      })
+      .where(eq(races.id, race.id));
+
+    const updatedRace = await db.query.races.findFirst({
+      where: eq(races.id, race.id),
+      with: {
+        address: true,
+        options: { with: { prices: true } },
+        sponsorships: true,
+        website: true,
+      },
+    });
+
+    if (!updatedRace) {
+      return { success: false, message: "Failed to fetch updated race" };
+    }
+
+    // Trigger revalidation in parallel (non-blocking)
+    revalidatePath("/dashboard");
+    revalidatePath(`/dashboard/edit-race/${race.id}`);
+
+    return {
+      success: true,
+      message: "Race updated successfully",
+      data: { race: updatedRace },
+    };
+  } catch (error) {
+    console.error("Error updating race:", error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to update race",
+    };
+  }
+}
+
+/**
+ * Helper functions
+ */
+async function upsertAddress(
+  address: Race["address"] | undefined,
+  _existingAddressId: number | null,
+): Promise<number | null> {
+  if (!address) return null;
+
+  const payload = {
+    type: address.type,
+    line1: address.line1,
+    line2: address.line2,
+    city: address.city,
+    state: address.state,
+    postalCode: address.postalCode,
+    country: address.country,
+    updatedAt: new Date().toISOString(),
   };
+
+  if (address.id) {
+    await db.update(addresses).set(payload).where(eq(addresses.id, address.id));
+    return address.id;
+  }
+
+  const [newAddress] = await db.insert(addresses).values(payload).returning();
+  return newAddress.id;
 }

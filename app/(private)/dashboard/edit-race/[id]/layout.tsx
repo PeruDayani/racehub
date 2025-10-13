@@ -26,7 +26,9 @@ export default async function EditRaceLsayout({
     <RaceStoreProvider initialRace={race.data?.race}>
       <Flex direction="row">
         <SideNav />
-        {children}
+        <Flex direction="column" flex={1} p="sm">
+          {children}
+        </Flex>
       </Flex>
     </RaceStoreProvider>
   );
