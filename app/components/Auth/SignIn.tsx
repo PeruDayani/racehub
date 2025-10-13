@@ -46,7 +46,7 @@ export default function SignIn({ redirect_to }: SignInProps) {
   );
 
   return (
-    <Container size={420} my={40}>
+    <Container size={420} my={40} mih="70vh">
       <Title ta="center">Welcome back!</Title>
 
       <Text ta="center" mt={12}>
