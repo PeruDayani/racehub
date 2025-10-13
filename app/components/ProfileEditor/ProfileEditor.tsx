@@ -13,8 +13,11 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { Camera } from "lucide-react";
+import { DateInput } from "@mantine/dates";
+import { notifications } from "@mantine/notifications";
+import { Camera, Save } from "lucide-react";
 import { useState } from "react";
+import { updateProfileAction } from "@/app/actions/profileActions";
 import { GENDER_OPTIONS, T_SHIRT_SIZE_OPTIONS } from "@/app/lib/constants";
 import type { UserProfile } from "@/app/lib/types";
 
@@ -40,19 +43,82 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
     profile.emergencyContactEmail || "",
   );
 
+  const [isSaving, setIsSaving] = useState(false);
+
+  const onSave = async () => {
+    setIsSaving(true);
+    try {
+      const result = await updateProfileAction({
+        profileImageURL: profileImageURL || undefined,
+        dateOfBirth: dateOfBirth || undefined,
+        gender: gender || undefined,
+        tShirtSize: tShirtSize || undefined,
+        phoneNumber: phoneNumber || undefined,
+        emergencyContactName: emergencyContactName || undefined,
+        emergencyContactPhone: emergencyContactPhone || undefined,
+        emergencyContactEmail: emergencyContactEmail || undefined,
+      });
+
+      if (result.success) {
+        notifications.show({
+          title: "Profile updated!",
+          message: "All changes have been saved.",
+          autoClose: 1000,
+          color: "cyan",
+        });
+      } else {
+        notifications.show({
+          title: "Failed to update profile!",
+          message: result.message,
+          autoClose: 3000,
+          color: "red",
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Failed to update profile!",
+        message: "Please try again.",
+        autoClose: 3000,
+        color: "red",
+      });
+      console.error("Error updating profile:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <Box p="xl" maw={900} mx="auto">
-      <Stack gap="lg">
-        <Stack gap="sm">
-          <Title order={2}>Profile</Title>
+      <Stack gap="lg" pos="relative">
+        <Stack
+          gap="sm"
+          pos="sticky"
+          top={80}
+          py={12}
+          style={{
+            zIndex: 200,
+            backgroundColor: "var(--mantine-color-body)",
+          }}
+        >
+          <Group justify="space-between" align="center">
+            <Title order={2}>Profile</Title>
+            <Button
+              leftSection={<Save size={16} />}
+              onClick={onSave}
+              loading={isSaving}
+              color="cyan"
+            >
+              Save
+            </Button>
+          </Group>
           <Text c="dimmed">Manage your personal information</Text>
         </Stack>
 
-        <Stack gap="xl">
+        <Stack gap="xl" px={2}>
           {/* Profile Photo Section */}
           <Card withBorder shadow="sm" radius="md" py="lg">
             <Card.Section inheritPadding py="xs">
-              <Text fw={500}>Profile Photo</Text>
+              <Text fw={500}>(WIP) Profile Photo</Text>
             </Card.Section>
             <Card.Section inheritPadding py="xs">
               <Group align="center" gap="xl">
@@ -92,11 +158,12 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
               <Stack gap="md">
                 <Grid>
                   <Grid.Col span={{ base: 12, md: 6 }}>
-                    <TextInput
+                    <DateInput
                       label="Date of Birth"
-                      type="date"
+                      placeholder="2025-01-01"
+                      valueFormat="YYYY-MM-DD"
                       value={dateOfBirth}
-                      onChange={(e) => setDateOfBirth(e.target.value)}
+                      onChange={(value) => setDateOfBirth(value || "")}
                     />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>

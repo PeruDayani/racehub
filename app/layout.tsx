@@ -6,6 +6,7 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import type React from "react";
 import NavBar from "./components/Navigation/NavBar";
 
@@ -33,6 +34,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={theme}>
+          <Notifications position="top-center" zIndex={1000} />
           <div className="relative">
             <NavBar />
             {children}
