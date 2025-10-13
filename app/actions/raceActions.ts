@@ -170,3 +170,102 @@ export async function getRacesByUserAction(): Promise<GetRacesByUserIdResponseTy
     };
   }
 }
+
+type UpdateRaceResponseType = {
+  success: boolean;
+  message: string;
+  data?: {
+    race: Race;
+  };
+};
+
+export async function updateRaceAction(
+  raceId: number,
+  updates: Partial<{
+    name: string;
+    status: string;
+    date: string;
+    registrationDeadline: string;
+  }>,
+): Promise<UpdateRaceResponseType> {
+  try {
+    // Get the authenticated user
+    const user = await getAuthenticatedUser();
+
+    if (!user) {
+      return {
+        success: false,
+        message: "User not authenticated",
+      };
+    }
+
+    // First verify the user owns this race
+    const existingRace = await db.query.races.findFirst({
+      where: and(eq(races.id, raceId), eq(races.userId, user.id)),
+    });
+
+    if (!existingRace) {
+      return {
+        success: false,
+        message: "Race not found or you do not have permission to edit it",
+      };
+    }
+
+    // Update the race
+    const [updatedRace] = await db
+      .update(races)
+      .set({
+        ...updates,
+        updatedAt: new Date().toISOString(),
+      })
+      .where(eq(races.id, raceId))
+      .returning();
+
+    if (!updatedRace) {
+      return {
+        success: false,
+        message: "Failed to update race",
+      };
+    }
+
+    // Fetch the updated race with all relations
+    const race = await db.query.races.findFirst({
+      where: eq(races.id, raceId),
+      with: {
+        address: true,
+        options: {
+          with: {
+            prices: true,
+          },
+        },
+        sponsorships: true,
+        website: true,
+      },
+    });
+
+    if (!race) {
+      return {
+        success: false,
+        message: "Failed to fetch updated race",
+      };
+    }
+
+    // Revalidate the events pages
+    revalidatePath("/events");
+    revalidatePath(`/events/${raceId}`);
+
+    return {
+      success: true,
+      message: "Race updated successfully",
+      data: {
+        race,
+      },
+    };
+  } catch (error) {
+    console.error("Error updating race:", error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to update race",
+    };
+  }
+}
