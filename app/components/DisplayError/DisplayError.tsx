@@ -25,6 +25,7 @@ export default function DisplayError({
     <Box
       style={{
         display: "flex",
+        margin: "auto",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
@@ -33,12 +34,13 @@ export default function DisplayError({
         textAlign: "center",
         gap: "1.5rem",
       }}
+      maw={500}
     >
       <Bug size={32} />
 
       <Title order={2}>{title}</Title>
 
-      <Text size="lg" c="dimmed" maw={500}>
+      <Text size="lg" c="dimmed">
         {message}
       </Text>
 

@@ -1,5 +1,5 @@
 import type { User } from "@supabase/supabase-js";
-import type { profiles } from "../../drizzle/schema";
+import type { addresses, profiles } from "../../drizzle/schema";
 
 // Re-export Supabase User type for convenience
 export type { User };
@@ -20,5 +20,12 @@ export interface AuthClaims {
 }
 
 // Types infered from Drizzle schema
+export type Profile = typeof profiles.$inferSelect;
 
-export type UserProfile = typeof profiles.$inferSelect;
+export type UserProfile = Profile & {
+  address?: Address | null;
+};
+
+export type Address = typeof addresses.$inferSelect;
+export type AddressType = "race" | "user";
+export type AddressInput = Omit<Address, "id" | "createdAt" | "updatedAt">;

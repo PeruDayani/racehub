@@ -59,12 +59,9 @@ TODO:
 
 ### Okay, up next
 - Awesome, what's next?
-- Pure design -> Homepage
 
-- And then let's figure out how the data fetching will work.
-- Try them, make YOUR OWN decision.
-- Server actions? Drizzle? Supabase?
-- Auth, RLS, safety?
+- Image uploads?
+- RLS?
 
 - And once we get one workflow working, we are going to fly through the rest :)
 - And then we figure out DB migrations for prod.

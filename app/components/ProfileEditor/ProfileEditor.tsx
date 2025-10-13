@@ -18,46 +18,38 @@ import { notifications } from "@mantine/notifications";
 import { Camera, Save } from "lucide-react";
 import { useState } from "react";
 import { updateProfileAction } from "@/app/actions/profileActions";
+import AddressEditor from "@/app/components/AddressEditor/AddressEditor";
 import { GENDER_OPTIONS, T_SHIRT_SIZE_OPTIONS } from "@/app/lib/constants";
-import type { UserProfile } from "@/app/lib/types";
+import type { AddressInput, UserProfile } from "@/app/lib/types";
 
 interface ProfileEditorProps {
   profile: UserProfile;
 }
 
 export default function ProfileEditor({ profile }: ProfileEditorProps) {
-  const [profileImageURL, _setProfileImageURL] = useState(
-    profile.profileImageURL || "",
-  );
-  const [dateOfBirth, setDateOfBirth] = useState(profile.dateOfBirth || "");
-  const [gender, setGender] = useState(profile.gender || "");
-  const [tShirtSize, setTShirtSize] = useState(profile.tShirtSize || "");
-  const [phoneNumber, setPhoneNumber] = useState(profile.phoneNumber || "");
-  const [emergencyContactName, setEmergencyContactName] = useState(
-    profile.emergencyContactName || "",
-  );
-  const [emergencyContactPhone, setEmergencyContactPhone] = useState(
-    profile.emergencyContactPhone || "",
-  );
-  const [emergencyContactEmail, setEmergencyContactEmail] = useState(
-    profile.emergencyContactEmail || "",
-  );
+  const [form, setForm] = useState({
+    profileImageURL: profile.profileImageURL ?? "",
+    dateOfBirth: profile.dateOfBirth ?? "",
+    gender: profile.gender ?? "",
+    tShirtSize: profile.tShirtSize ?? "",
+    phoneNumber: profile.phoneNumber ?? "",
+    emergencyContactName: profile.emergencyContactName ?? "",
+    emergencyContactPhone: profile.emergencyContactPhone ?? "",
+    emergencyContactEmail: profile.emergencyContactEmail ?? "",
+    address: profile.address ?? undefined,
+  });
+
+  const updateField = (
+    field: keyof typeof form,
+    value: string | AddressInput | undefined,
+  ) => setForm((prev) => ({ ...prev, [field]: value }));
 
   const [isSaving, setIsSaving] = useState(false);
 
   const onSave = async () => {
     setIsSaving(true);
     try {
-      const result = await updateProfileAction({
-        profileImageURL: profileImageURL || undefined,
-        dateOfBirth: dateOfBirth || undefined,
-        gender: gender || undefined,
-        tShirtSize: tShirtSize || undefined,
-        phoneNumber: phoneNumber || undefined,
-        emergencyContactName: emergencyContactName || undefined,
-        emergencyContactPhone: emergencyContactPhone || undefined,
-        emergencyContactEmail: emergencyContactEmail || undefined,
-      });
+      const result = await updateProfileAction(form);
 
       if (result.success) {
         notifications.show({
@@ -123,7 +115,7 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
             <Card.Section inheritPadding py="xs">
               <Group align="center" gap="xl">
                 <Avatar
-                  src={profileImageURL || null}
+                  src={form.profileImageURL || null}
                   size="lg"
                   radius="xl"
                   color="cyan"
@@ -162,16 +154,18 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
                       label="Date of Birth"
                       placeholder="2025-01-01"
                       valueFormat="YYYY-MM-DD"
-                      value={dateOfBirth}
-                      onChange={(value) => setDateOfBirth(value || "")}
+                      value={form.dateOfBirth}
+                      onChange={(value) =>
+                        updateField("dateOfBirth", value || "")
+                      }
                     />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>
                     <Select
                       label="Gender"
                       placeholder="Select gender"
-                      value={gender}
-                      onChange={(value) => setGender(value || "")}
+                      value={form.gender}
+                      onChange={(value) => updateField("gender", value || "")}
                       data={GENDER_OPTIONS}
                     />
                   </Grid.Col>
@@ -183,16 +177,20 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
                       label="Phone Number"
                       type="tel"
                       placeholder="(555) 123-4567"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      value={form.phoneNumber}
+                      onChange={(e) =>
+                        updateField("phoneNumber", e.target.value)
+                      }
                     />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>
                     <Select
                       label="T-Shirt Size"
                       placeholder="Select size"
-                      value={tShirtSize}
-                      onChange={(value) => setTShirtSize(value || "")}
+                      value={form.tShirtSize}
+                      onChange={(value) =>
+                        updateField("tShirtSize", value || "")
+                      }
                       data={T_SHIRT_SIZE_OPTIONS}
                     />
                   </Grid.Col>
@@ -211,8 +209,10 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
                 <TextInput
                   label="Name"
                   placeholder="Full name"
-                  value={emergencyContactName}
-                  onChange={(e) => setEmergencyContactName(e.target.value)}
+                  value={form.emergencyContactName}
+                  onChange={(e) =>
+                    updateField("emergencyContactName", e.target.value)
+                  }
                 />
 
                 <Grid>
@@ -221,8 +221,10 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
                       label="Phone"
                       type="tel"
                       placeholder="(555) 123-4567"
-                      value={emergencyContactPhone}
-                      onChange={(e) => setEmergencyContactPhone(e.target.value)}
+                      value={form.emergencyContactPhone}
+                      onChange={(e) =>
+                        updateField("emergencyContactPhone", e.target.value)
+                      }
                     />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>
@@ -230,14 +232,23 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
                       label="Email"
                       type="email"
                       placeholder="email@example.com"
-                      value={emergencyContactEmail}
-                      onChange={(e) => setEmergencyContactEmail(e.target.value)}
+                      value={form.emergencyContactEmail}
+                      onChange={(e) =>
+                        updateField("emergencyContactEmail", e.target.value)
+                      }
                     />
                   </Grid.Col>
                 </Grid>
               </Stack>
             </Card.Section>
           </Card>
+
+          {/* Address Section */}
+          <AddressEditor
+            address={form.address}
+            addressType={"user"}
+            onChange={(address) => updateField("address", address)}
+          />
         </Stack>
       </Stack>
     </Box>

@@ -2,10 +2,10 @@
 
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { profiles } from "../../drizzle/schema";
+import { addresses, profiles } from "../../drizzle/schema";
 import { db } from "../lib/db";
 import { createClient } from "../lib/supabase/server";
-import type { UserProfile } from "../lib/types";
+import type { AddressInput, UserProfile } from "../lib/types";
 
 type ProfileResponseType = {
   success: boolean;
@@ -14,9 +14,11 @@ type ProfileResponseType = {
 };
 
 type UpdateProfileInput = Omit<
-  Partial<typeof profiles.$inferInsert>,
-  "id" | "createdAt" | "updatedAt"
->;
+  Partial<UserProfile>,
+  "id" | "createdAt" | "updatedAt" | "addressId" | "address"
+> & {
+  address?: AddressInput;
+};
 
 export async function updateProfileAction(
   input: UpdateProfileInput,
@@ -39,6 +41,7 @@ export async function updateProfileAction(
     // Check if profile exists
     const existingProfile = await db.query.profiles.findFirst({
       where: eq(profiles.id, user.id),
+      with: { address: true },
     });
 
     if (!existingProfile) {
@@ -48,15 +51,39 @@ export async function updateProfileAction(
       };
     }
 
+    const { address: addressData, ...profileData } = input;
+    let addressId = existingProfile.addressId;
+
+    if (addressData) {
+      const now = new Date().toISOString();
+
+      if (existingProfile.addressId) {
+        // Update the existing address
+        await db
+          .update(addresses)
+          .set({ ...addressData, updatedAt: now })
+          .where(eq(addresses.id, existingProfile.addressId));
+      } else {
+        // Create a new address
+        const [newAddress] = await db
+          .insert(addresses)
+          .values({ ...addressData, createdAt: now, updatedAt: now })
+          .returning();
+        addressId = newAddress.id;
+      }
+    }
+
     // Update profile
-    const [updatedProfile] = await db
+    await db
       .update(profiles)
-      .set({
-        ...input,
-        updatedAt: new Date().toISOString(),
-      })
+      .set({ ...profileData, addressId, updatedAt: new Date().toISOString() })
       .where(eq(profiles.id, user.id))
       .returning();
+
+    const updatedProfile = await db.query.profiles.findFirst({
+      where: eq(profiles.id, user.id),
+      with: { address: true },
+    });
 
     // Revalidate the profile page
     revalidatePath("/profile");
@@ -93,8 +120,11 @@ export async function getProfileAction(): Promise<ProfileResponseType> {
     }
 
     // Get profile
-    let profile = await db.query.profiles.findFirst({
+    const profile = await db.query.profiles.findFirst({
       where: eq(profiles.id, user.id),
+      with: {
+        address: true,
+      },
     });
 
     // If profile doesn't exist, create one
@@ -106,22 +136,17 @@ export async function getProfileAction(): Promise<ProfileResponseType> {
         })
         .returning();
 
-      profile = newProfile;
-
-      // Revalidate the profile page
-      revalidatePath("/profile");
-
       return {
         success: true,
         message: "Profile created successfully",
-        data: profile,
+        data: { ...newProfile, address: null },
       };
     }
 
     return {
       success: true,
       message: "Profile retrieved successfully",
-      data: profile,
+      data: { ...profile },
     };
   } catch (error) {
     console.error("Error getting profile:", error);

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   boolean,
   date,
@@ -12,6 +13,10 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
+
+// =============================
+// Tables
+// =============================
 
 export const profiles = pgTable("profiles", {
   // Matches id from auth.users table in Supabase
@@ -125,3 +130,35 @@ export const addresses = pgTable("addresses", {
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
+
+// =============================
+// Relations
+// =============================
+
+export const profilesRelations = relations(profiles, ({ one }) => ({
+  address: one(addresses, {
+    fields: [profiles.addressId],
+    references: [addresses.id],
+  }),
+}));
+
+export const racesRelations = relations(races, ({ one, many }) => ({
+  address: one(addresses, {
+    fields: [races.addressId],
+    references: [addresses.id],
+  }),
+  options: many(raceOptions),
+  sponsorships: many(sponsorships),
+  website: one(raceWebsites, {
+    fields: [races.id],
+    references: [raceWebsites.raceId],
+  }),
+}));
+
+export const raceOptionsRelations = relations(raceOptions, ({ one, many }) => ({
+  race: one(races, {
+    fields: [raceOptions.raceId],
+    references: [races.id],
+  }),
+  prices: many(raceOptionPrices),
+}));
