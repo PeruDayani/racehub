@@ -1,4 +1,5 @@
 import type { User } from "@supabase/supabase-js";
+import type { profiles } from "../../drizzle/schema";
 
 // Re-export Supabase User type for convenience
 export type { User };
@@ -17,3 +18,7 @@ export interface AuthClaims {
     full_name: string;
   };
 }
+
+// Types infered from Drizzle schema
+
+export type UserProfile = typeof profiles.$inferSelect;

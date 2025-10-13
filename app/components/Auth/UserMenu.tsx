@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, Menu, Stack, Text, UnstyledButton } from "@mantine/core";
-import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
+import { Footprints, LogOut, Settings, TicketCheck, User } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { signOutAction } from "@/app/actions/authActions";
@@ -56,12 +56,21 @@ export default function UserMenu({ user }: { user: AuthClaims }) {
         <Menu.Divider />
 
         <Menu.Item
-          leftSection={<LayoutDashboard size={16} />}
+          leftSection={<TicketCheck size={16} />}
+          component={Link}
+          href="/events"
+        >
+          My Events
+        </Menu.Item>
+
+        <Menu.Item
+          leftSection={<Footprints size={16} />}
           component={Link}
           href="/races"
         >
-          Races
+          Find a Race
         </Menu.Item>
+
         <Menu.Item
           leftSection={<User size={16} />}
           component={Link}
@@ -69,7 +78,9 @@ export default function UserMenu({ user }: { user: AuthClaims }) {
         >
           Profile
         </Menu.Item>
-        <Menu.Item leftSection={<Settings size={16} />}>Settings</Menu.Item>
+        <Menu.Item disabled leftSection={<Settings size={16} />}>
+          Settings
+        </Menu.Item>
 
         <Menu.Divider />
 
