@@ -170,3 +170,22 @@ export async function getRacesByUserAction(): Promise<GetRacesByUserIdResponseTy
     };
   }
 }
+
+type UpdateRaceResponseType = {
+  success: boolean;
+  message: string;
+  data?: {
+    race: Race;
+  };
+};
+
+export async function updateRaceAction(
+  _race: Race,
+): Promise<UpdateRaceResponseType> {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  return {
+    success: false,
+    message: "Function not implemented",
+  };
+}

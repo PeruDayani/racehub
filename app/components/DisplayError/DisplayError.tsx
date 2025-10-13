@@ -31,7 +31,6 @@ export default function DisplayError({
         justifyContent: "center",
         minHeight: "60vh",
         padding: "2rem",
-        textAlign: "center",
         gap: "1.5rem",
       }}
       maw={500}
@@ -44,7 +43,7 @@ export default function DisplayError({
         {message}
       </Text>
 
-      <Alert ta="left" color="red" w="100%">
+      <Alert color="red" w="100%">
         <Text fw={600}>Error:</Text>
         <Text>{errorMessage}</Text>
       </Alert>

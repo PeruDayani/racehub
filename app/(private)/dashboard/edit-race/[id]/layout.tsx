@@ -1,0 +1,33 @@
+import { Flex } from "@mantine/core";
+import { getRaceAction } from "@/app/actions/raceActions";
+import DisplayError from "@/app/components/DisplayError/DisplayError";
+import SideNav from "@/app/components/RaceEditor/SideNavigation/SideNav";
+import { RaceStoreProvider } from "@/app/context/RaceStoreContext";
+
+type EditRaceLayoutProps = {
+  params: Promise<{ id: string }>;
+  children: React.ReactNode;
+};
+
+export default async function EditRaceLsayout({
+  params,
+  children,
+}: EditRaceLayoutProps) {
+  const { id } = await params;
+  const race = await getRaceAction(parseInt(id, 10));
+
+  if (!race.success || !race.data?.race) {
+    return (
+      <DisplayError errorMessage={race.message} retryUrl={`/events/${id}`} />
+    );
+  }
+
+  return (
+    <RaceStoreProvider initialRace={race.data?.race}>
+      <Flex direction="row">
+        <SideNav />
+        {children}
+      </Flex>
+    </RaceStoreProvider>
+  );
+}

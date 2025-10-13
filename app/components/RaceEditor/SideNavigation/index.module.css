@@ -1,0 +1,16 @@
+.sideNav {
+  border-right: 1px solid var(--mantine-color-gray-3);
+  position: sticky;
+  top: 80px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.raceTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition:
+    opacity 0.25s ease,
+    width 0.25s ease;
+}
