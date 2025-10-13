@@ -58,7 +58,19 @@ TODO:
 - https://orm.drizzle.team/docs/rls#using-with-supabase
 
 ### Okay, up next
-- Understand the different ways of calling supabase
-- via Drizzle? we handle auth?
-- via js lib? RLS handle auth?
-- depending on these two things we will proceed.
+- Awesome, what's next?
+- Pure design -> Homepage
+
+- And then let's figure out how the data fetching will work.
+- Try them, make YOUR OWN decision.
+- Server actions? Drizzle? Supabase?
+- Auth, RLS, safety?
+
+- And once we get one workflow working, we are going to fly through the rest :)
+- And then we figure out DB migrations for prod.
+
+- And then we work on Stripe.
+- And then we continue with the post payment flows.
+- And then we start on the Mobile app.
+
+- God lord, I'm going to learn a lot

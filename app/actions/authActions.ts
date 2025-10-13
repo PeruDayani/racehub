@@ -76,5 +76,5 @@ export async function signOutAction(): Promise<AuthResponseType> {
   revalidatePath("/", "layout");
 
   // Redirect to races page after sign out
-  redirect("/races");
+  redirect("/home");
 }

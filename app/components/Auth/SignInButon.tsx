@@ -9,7 +9,14 @@ export default function SignInButton() {
   const href = `/auth/signin?redirect_to=${encodeURIComponent(pathname)}`;
 
   return (
-    <Button component={Link} href={href}>
+    <Button
+      size="sm"
+      radius="md"
+      variant="filled"
+      color="blue"
+      component={Link}
+      href={href}
+    >
       Sign In
     </Button>
   );

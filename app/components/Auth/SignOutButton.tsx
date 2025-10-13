@@ -21,7 +21,14 @@ export default function SignOutButton() {
   }, []);
 
   return (
-    <Button onClick={onSignOut} disabled={isLoading}>
+    <Button
+      size="sm"
+      radius="md"
+      variant="filled"
+      color="blue"
+      onClick={onSignOut}
+      disabled={isLoading}
+    >
       {isLoading ? "Signing out..." : "Sign Out"}
     </Button>
   );
