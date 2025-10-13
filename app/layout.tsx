@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import React from "react";
 import {
+  ColorSchemeScript,
   createTheme,
   MantineProvider,
-  ColorSchemeScript,
   mantineHtmlProps,
 } from "@mantine/core";
+import type React from "react";
 import NavBar from "./components/Navigation/NavBar";
 
 const theme = createTheme({

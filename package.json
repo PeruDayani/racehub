@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "biome format --write",
+    "lint": "biome check --write --unsafe",
     "migrate": "npx drizzle-kit generate && npx drizzle-kit migrate"
   },
   "dependencies": {

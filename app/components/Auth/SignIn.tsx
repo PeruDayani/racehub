@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import { useCallback, useState } from "react";
-import { signIn } from "@/app/actions/authActions";
+import { signInAction } from "@/app/actions/authActions";
 
 type SignInProps = {
   redirect_to?: string;
@@ -33,7 +33,7 @@ export default function SignIn({ redirect_to }: SignInProps) {
       setIsLoading(true);
       setError(null);
 
-      const result = await signIn(email, password, redirect_to);
+      const result = await signInAction(email, password, redirect_to);
 
       // If result is returned, it means there was an error
       // (successful sign-in redirects and never returns)

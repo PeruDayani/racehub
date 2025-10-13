@@ -3,9 +3,7 @@
 import {
   Anchor,
   Button,
-  Checkbox,
   Container,
-  Group,
   Paper,
   PasswordInput,
   Text,
@@ -13,7 +11,8 @@ import {
   Title,
 } from "@mantine/core";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { signUpAction } from "@/app/actions/authActions";
 
 type SignUpProps = {
   redirect_to?: string;
@@ -24,6 +23,40 @@ export default function SignUp({ redirect_to }: SignUpProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSignUp = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setIsLoading(true);
+      setError(null);
+
+      // Validate passwords match
+      if (password !== repeatPassword) {
+        setError("Passwords do not match");
+        setIsLoading(false);
+        return;
+      }
+
+      // Validate full name is provided
+      if (!fullName.trim()) {
+        setError("Full name is required");
+        setIsLoading(false);
+        return;
+      }
+
+      const result = await signUpAction(email, password, fullName, redirect_to);
+
+      // If result is returned, it means there was an error
+      // (successful sign-up redirects and never returns)
+      if (!result.success) {
+        setError(result.message);
+        setIsLoading(false);
+      }
+    },
+    [email, password, fullName, repeatPassword, redirect_to],
+  );
 
   return (
     <Container size={420} my={40}>
@@ -77,9 +110,20 @@ export default function SignUp({ redirect_to }: SignUpProps) {
               : null
           }
         />
-        <Button fullWidth mt="xl" radius="md">
-          Sign up
+        <Button
+          fullWidth
+          mt="xl"
+          radius="md"
+          onClick={onSignUp}
+          disabled={isLoading}
+        >
+          {isLoading ? "Signing up..." : "Sign up"}
         </Button>
+        {error && (
+          <Text ta="center" c="red" mt="sm" fz="sm">
+            {error}
+          </Text>
+        )}
       </Paper>
     </Container>
   );

@@ -1,10 +1,10 @@
 import { Group } from "@mantine/core";
-import Logo from "./components/Logo";
-import FindRaces from "./components/FindRaces";
-import styles from "./index.module.css";
 import { createClient } from "@/app/lib/supabase/server";
-import SignOutButton from "../Auth/SignOutButton";
 import SignInButton from "../Auth/SignInButon";
+import SignOutButton from "../Auth/SignOutButton";
+import FindRaces from "./components/FindRaces";
+import Logo from "./components/Logo";
+import styles from "./index.module.css";
 
 export default async function NavBar() {
   const supabase = await createClient();

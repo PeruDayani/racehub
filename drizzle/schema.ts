@@ -1,15 +1,15 @@
 import {
+  boolean,
+  date,
+  integer,
+  jsonb,
+  numeric,
   pgTable,
   serial,
   text,
+  time,
   timestamp,
   uuid,
-  integer,
-  date,
-  boolean,
-  numeric,
-  time,
-  jsonb,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
 
