@@ -40,10 +40,13 @@ export type UserProfile = Profile_DB & {
   address?: Address_DB | null;
 };
 
+export type RaceOption = RaceOption_DB & {
+  prices: RaceOptionPrice_DB[];
+};
+
 export type Race = Race_DB & {
   address?: Address_DB | null;
-  options: RaceOption_DB[];
-  optionPrices: RaceOptionPrice_DB[];
+  options: RaceOption[];
   sponsorships: Sponsorship_DB[];
   website: RaceWebsite_DB;
 };

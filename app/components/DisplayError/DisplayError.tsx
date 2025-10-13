@@ -64,7 +64,7 @@ export default function DisplayError({
         {retryUrl && (
           <Button
             component={Link}
-            href={backUrl}
+            href={retryUrl}
             size="md"
             radius="md"
             variant="outline"

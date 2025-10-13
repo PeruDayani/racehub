@@ -69,6 +69,7 @@ export default function Hero() {
               variant="outline"
               color="blue"
               leftSection={<Users size={20} />}
+              className={styles.shadowButton}
               component="a"
               href="/events"
             >

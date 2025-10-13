@@ -161,3 +161,31 @@ export const raceOptionsRelations = relations(raceOptions, ({ one, many }) => ({
   }),
   prices: many(raceOptionPrices),
 }));
+
+export const raceOptionPricesRelations = relations(
+  raceOptionPrices,
+  ({ one }) => ({
+    race: one(races, {
+      fields: [raceOptionPrices.raceId],
+      references: [races.id],
+    }),
+    raceOption: one(raceOptions, {
+      fields: [raceOptionPrices.raceOptionId],
+      references: [raceOptions.id],
+    }),
+  }),
+);
+
+export const sponsorshipsRelations = relations(sponsorships, ({ one }) => ({
+  race: one(races, {
+    fields: [sponsorships.raceId],
+    references: [races.id],
+  }),
+}));
+
+export const raceWebsitesRelations = relations(raceWebsites, ({ one }) => ({
+  race: one(races, {
+    fields: [raceWebsites.raceId],
+    references: [races.id],
+  }),
+}));
