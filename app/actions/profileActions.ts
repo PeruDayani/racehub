@@ -4,8 +4,8 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { addresses, profiles } from "../../drizzle/schema";
 import { db } from "../lib/db";
-import { createClient } from "../lib/supabase/server";
 import type { AddressInput, UserProfile } from "../lib/types";
+import { getAuthenticatedUser } from "./utils";
 
 type ProfileResponseType = {
   success: boolean;
@@ -25,13 +25,9 @@ export async function updateProfileAction(
 ): Promise<ProfileResponseType> {
   try {
     // Get the authenticated user
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const user = await getAuthenticatedUser();
 
-    if (authError || !user) {
+    if (!user) {
       return {
         success: false,
         message: "User not authenticated",
@@ -106,13 +102,9 @@ export async function updateProfileAction(
 export async function getProfileAction(): Promise<ProfileResponseType> {
   try {
     // Get the authenticated user
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const user = await getAuthenticatedUser();
 
-    if (authError || !user) {
+    if (!user) {
       return {
         success: false,
         message: "User not authenticated",

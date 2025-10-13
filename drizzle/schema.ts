@@ -38,16 +38,14 @@ export const profiles = pgTable("profiles", {
 
 export const races = pgTable("races", {
   id: serial("id").primaryKey().notNull(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => authUsers.id, { onDelete: "no action" }),
+  userId: uuid("user_id").references(() => authUsers.id, {
+    onDelete: "no action",
+  }),
   status: text("status").notNull().default("draft"),
   name: text("name").notNull(),
-  addressId: integer("addressId")
-    .notNull()
-    .references(() => addresses.id),
-  date: date("date").notNull(),
-  registrationDeadline: date("registration_deadline").notNull(),
+  addressId: integer("addressId").references(() => addresses.id),
+  date: date("date"),
+  registrationDeadline: date("registration_deadline"),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
@@ -148,6 +146,7 @@ export const racesRelations = relations(races, ({ one, many }) => ({
     references: [addresses.id],
   }),
   options: many(raceOptions),
+  optionPrices: many(raceOptionPrices),
   sponsorships: many(sponsorships),
   website: one(raceWebsites, {
     fields: [races.id],
