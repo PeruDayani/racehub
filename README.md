@@ -47,6 +47,7 @@ Overview
 - Cookie is send to the server with every request
 - Cookie is authenticated and refreshed by the middleware
 - supabase.getUser() is the best authentication as it hits the database.
+- I like and will be using fucking server actions.
 
 - https://github.com/supabase/supabase/issues/19883#issuecomment-2094656180
 - https://supabase.com/docs/guides/auth/managing-user-data#using-triggers
@@ -57,12 +58,6 @@ TODO:
 - https://orm.drizzle.team/docs/rls#using-with-supabase
 
 ### Okay, up next
-- Middlewear to protect (protected) routes, all (public) routes are public
-- Sign in modals from supabase ui or something
-- client and server side supabase user auth tokens.
-- that should be enough to get us up and running with auth.
-- and it's already making a lot more sense doing it step by step.
-
 - Understand the different ways of calling supabase
 - via Drizzle? we handle auth?
 - via js lib? RLS handle auth?
