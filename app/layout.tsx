@@ -7,6 +7,7 @@ import {
   ColorSchemeScript,
   mantineHtmlProps,
 } from "@mantine/core";
+import NavBar from "./components/Navigation/NavBar";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -31,7 +32,10 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider theme={theme}>
+          <NavBar />
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );
