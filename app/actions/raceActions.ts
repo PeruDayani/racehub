@@ -45,7 +45,7 @@ export async function createRaceAction(
     }
 
     // Revalidate the events page
-    revalidatePath("/events");
+    revalidatePath("/dashboard");
 
     return {
       success: true,

@@ -58,9 +58,9 @@ export default function UserMenu({ user }: { user: AuthClaims }) {
         <Menu.Item
           leftSection={<TicketCheck size={16} />}
           component={Link}
-          href="/events"
+          href="/dashboard"
         >
-          My Events
+          My Dashboard
         </Menu.Item>
 
         <Menu.Item

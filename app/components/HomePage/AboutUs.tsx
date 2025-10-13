@@ -254,7 +254,7 @@ export default function AboutUs() {
                 variant="white"
                 c="blue"
                 component="a"
-                href="/events"
+                href="/dashboard"
                 fw={500}
               >
                 Start Planning Your Race

@@ -5,16 +5,11 @@ export default async function RacePage({ params }: { params: { id: string } }) {
   const { id } = await params;
   const race = await getRaceAction(parseInt(id, 10));
 
-  if (!race.success) {
+  if (!race.success || !race.data?.race) {
     return (
       <DisplayError errorMessage={race.message} retryUrl={`/events/${id}`} />
     );
   }
 
-  return (
-    <div>
-      <h1>Race</h1>
-      <p>{race.data?.race.name}</p>
-    </div>
-  );
+  return <div>Race Editor</div>;
 }

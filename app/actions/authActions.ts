@@ -28,8 +28,8 @@ export async function signInAction(
   // Revalidate the cache
   revalidatePath("/", "layout");
 
-  // Redirect to the provided URL or default to events page
-  const redirectUrl = redirect_to || "/events";
+  // Redirect to the provided URL or default to dashboard page
+  const redirectUrl = redirect_to || "/dashboard";
   redirect(redirectUrl);
 }
 
@@ -58,8 +58,8 @@ export async function signUpAction(
   // Revalidate the cache
   revalidatePath("/", "layout");
 
-  // Redirect to the provided URL or default to events page
-  const redirectUrl = redirect_to || "/events";
+  // Redirect to the provided URL or default to dashboard page
+  const redirectUrl = redirect_to || "/dashboard";
   redirect(redirectUrl);
 }
 

@@ -33,7 +33,7 @@ export default function CreateRace() {
           // Reset form and close modal on success
           setRaceName("");
           close();
-          router.push(`/events/${result.data.raceId}`);
+          router.push(`/dashboard/edit-race/${result.data.raceId}`);
         }
       } catch (error) {
         console.error("Error creating race:", error);

@@ -11,7 +11,6 @@ import {
   Stack,
   Text,
   TextInput,
-  Title,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
@@ -21,6 +20,7 @@ import { updateProfileAction } from "@/app/actions/profileActions";
 import AddressEditor from "@/app/components/AddressEditor/AddressEditor";
 import { GENDER_OPTIONS, T_SHIRT_SIZE_OPTIONS } from "@/app/lib/constants";
 import type { AddressInput, UserProfile } from "@/app/lib/types";
+import PageHeader from "../PageHeader.tsx/PageHeader";
 
 interface ProfileEditorProps {
   profile: UserProfile;
@@ -93,7 +93,10 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
           }}
         >
           <Group justify="space-between" align="center">
-            <Title order={2}>Profile</Title>
+            <PageHeader
+              title="Profile"
+              description="Manage your personal information"
+            />
             <Button
               leftSection={<Save size={16} />}
               onClick={onSave}
@@ -103,7 +106,6 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
               Save
             </Button>
           </Group>
-          <Text c="dimmed">Manage your personal information</Text>
         </Stack>
 
         <Stack gap="xl" px={2}>

@@ -16,9 +16,9 @@ export default function DisplayError({
   title = "We ran into a wall!",
   message = "We could not process your request at this time. The team has been notified and will address the issue ASAP.",
   errorMessage,
-  backUrl = "/events",
-  backLabel = "My Events",
-  retryUrl,
+  backUrl = "/dashboard",
+  backLabel = "My Dashboard",
+  retryUrl = "/dashboard",
   retryLabel = "Refresh",
 }: DisplayErrorProps) {
   return (
@@ -61,19 +61,17 @@ export default function DisplayError({
         >
           {backLabel}
         </Button>
-        {retryUrl && (
-          <Button
-            component={Link}
-            href={retryUrl}
-            size="md"
-            radius="md"
-            variant="outline"
-            color="blue"
-            leftSection={<RefreshCcw size={20} />}
-          >
-            {retryLabel}
-          </Button>
-        )}
+        <Button
+          component={Link}
+          href={retryUrl}
+          size="md"
+          radius="md"
+          variant="outline"
+          color="blue"
+          leftSection={<RefreshCcw size={20} />}
+        >
+          {retryLabel}
+        </Button>
       </Group>
     </Box>
   );

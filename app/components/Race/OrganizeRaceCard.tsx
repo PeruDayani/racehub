@@ -12,11 +12,11 @@ import {
 import { useRouter } from "next/navigation";
 import type { Race } from "@/app/lib/types";
 
-interface RaceCardProps {
+interface OrganizeRaceCardProps {
   race: Race;
 }
 
-export default function RaceCard({ race }: RaceCardProps) {
+export default function OrganizeRaceCard({ race }: OrganizeRaceCardProps) {
   const router = useRouter();
 
   const formatDate = (dateString: string | null) => {
@@ -65,7 +65,7 @@ export default function RaceCard({ race }: RaceCardProps) {
   };
 
   const handleCardClick = () => {
-    router.push(`/events/${race.id}`);
+    router.push(`/dashboard/edit-race/${race.id}`);
   };
 
   return (

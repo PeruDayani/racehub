@@ -52,22 +52,27 @@ Overview
 - https://github.com/supabase/supabase/issues/19883#issuecomment-2094656180
 - https://supabase.com/docs/guides/auth/managing-user-data#using-triggers
 
+### Prod Migrations
+- Switch the DATABASE_URL in .env
+- Run `npm run migrate`
+- Can I wire this up to a Vercel action somehow?
+
 TODO:
-- How to deploy migrations safely?
 - How to define RLS for Supabase?
 - https://orm.drizzle.team/docs/rls#using-with-supabase
 
 ### Okay, up next
 - Awesome, what's next?
 
-- Image uploads?
-- RLS?
+- Race Editor focus - I like the super focused view
+- Image uploads
+- Race Preview / Public pages
+- All Races page
+- Ticket page
+- STRIPE!!!
+- Post Payment workflows
 
-- And once we get one workflow working, we are going to fly through the rest :)
-- And then we figure out DB migrations for prod.
-
-- And then we work on Stripe.
-- And then we continue with the post payment flows.
-- And then we start on the Mobile app.
+- Emails?
+- RLS? - My understanding is that by taking care of Auth in server actions I don't need RLS
 
 - God lord, I'm going to learn a lot
