@@ -188,8 +188,6 @@ export async function updateRaceAction(
   race: Race,
 ): Promise<UpdateRaceResponseType> {
   try {
-    console.log("updateRaceAction", race);
-
     const user = await getAuthenticatedUser();
     if (!user) return { success: false, message: "User not authenticated" };
 

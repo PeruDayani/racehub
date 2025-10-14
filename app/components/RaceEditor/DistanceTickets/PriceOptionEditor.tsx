@@ -77,7 +77,7 @@ export default function PriceOptionEditor({
             </ActionIcon>
             <div>
               <Text fw={600} size="sm">
-                Ticket Option {index + 1}: {priceOption.label || "Untitled"}
+                {index + 1}. {priceOption.label || "Untitled Ticket Option"}
               </Text>
               <Text size="xs" c="dimmed">
                 ${priceInDollars.toFixed(2)} {getAvailabilityText()}

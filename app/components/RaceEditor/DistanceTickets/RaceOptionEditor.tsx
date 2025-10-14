@@ -34,7 +34,6 @@ interface RaceOptionEditorProps {
 export default function RaceOptionEditor({
   optionId,
   option,
-  index,
 }: RaceOptionEditorProps) {
   const [collapsed, setCollapsed] = useState<boolean>(option.name !== null);
 
@@ -88,7 +87,7 @@ export default function RaceOptionEditor({
             </ActionIcon>
             <div>
               <Text fw={500} size="lg">
-                Race Option {index + 1}: {option.name || "Untitled"}
+                {option.name || "Untitled Race Option"}
               </Text>
               <Text size="sm" c="dimmed">
                 {getSummary()}
