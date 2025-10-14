@@ -62,17 +62,23 @@ TODO:
 - https://orm.drizzle.team/docs/rls#using-with-supabase
 
 ### Okay, up next
-- Awesome, what's next?
 
-- Race Editor focus - I like the super focused view
-- Image uploads
-- Race Preview / Public pages
-- All Races page
-- Ticket page
-- STRIPE!!!
-- Post Payment workflows
+- Great fucking work.
+- Wire up the race website inputs next
+- Wire up a very simple race preview page
+- Wire up a very simple race public page
 
-- Emails?
-- RLS? - My understanding is that by taking care of Auth in server actions I don't need RLS
+- STRIPE!!
+- Focus in on the ticket workflow.
+
+And then after that we have:
+- Dashboard stats
+- Racer ticket view
+- QR codes
+- Improving the Race Preview/Public pages
+- Adding more fields to the RaceEditor
+- All Races Search page
+- Upload workflow
+- Emails
 
 - God lord, I'm going to learn a lot
