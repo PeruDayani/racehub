@@ -55,17 +55,18 @@ export const raceOptions = pgTable("race_options", {
   raceId: integer("race_id")
     .notNull()
     .references(() => races.id, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  distanceKm: numeric("distance_km").notNull(),
-  startTime: time("start_time").notNull(),
-  cutoffTime: time("cutoff_time").notNull(),
+  name: text("name"),
+  distanceKm: numeric("distance_km"),
+  startTime: time("start_time"),
+  cutoffTime: time("cutoff_time"),
   courseMapUrl: text("course_map_url"),
   isVirtual: boolean("is_virtual").notNull().default(false),
   isFree: boolean("is_free").notNull().default(false),
   description: text("description"),
   ageMin: integer("age_min"),
   ageMax: integer("age_max"),
-  genderCategory: text("gender_category").notNull(),
+  genderCategory: text("gender_category").notNull().default("all"),
+  position: integer("position"),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
@@ -78,11 +79,12 @@ export const raceOptionPrices = pgTable("race_option_prices", {
   raceOptionId: integer("race_option_id")
     .notNull()
     .references(() => raceOptions.id, { onDelete: "cascade" }),
-  label: text("label").notNull(),
-  priceCents: integer("price_cents").notNull(),
+  label: text("label"),
+  priceCents: integer("price_cents"),
   maxParticipants: integer("max_participants"),
-  startsAt: timestamp("starts_at", { mode: "string" }).notNull(),
-  endsAt: timestamp("ends_at", { mode: "string" }).notNull(),
+  startsAt: timestamp("starts_at", { mode: "string" }),
+  endsAt: timestamp("ends_at", { mode: "string" }),
+  position: integer("position"),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });

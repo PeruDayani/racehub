@@ -25,6 +25,10 @@ export const sql =
 
 export const db = global._db ?? drizzle(sql, { schema });
 
+// ✅ Export types for use throughout the app
+export type Database = typeof db;
+export type TransactionClient = Database;
+
 // ✅ Cache in globalThis for dev hot-reload
 if (process.env.NODE_ENV !== "production") {
   global._sql = sql;

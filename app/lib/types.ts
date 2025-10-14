@@ -32,9 +32,9 @@ export type Profile_DB = typeof profiles.$inferSelect;
 export type Address_DB = typeof addresses.$inferSelect;
 export type Race_DB = typeof races.$inferSelect;
 export type RaceOption_DB = typeof raceOptions.$inferSelect;
+export type RaceOptionPrice_DB = typeof raceOptionPrices.$inferSelect;
 export type RaceWebsite_DB = typeof raceWebsites.$inferSelect;
 export type Sponsorship_DB = typeof sponsorships.$inferSelect;
-export type RaceOptionPrice_DB = typeof raceOptionPrices.$inferSelect;
 
 export type UserProfile = Profile_DB & {
   address?: Address_DB | null;
@@ -43,6 +43,8 @@ export type UserProfile = Profile_DB & {
 export type RaceOption = RaceOption_DB & {
   prices: RaceOptionPrice_DB[];
 };
+
+export type RaceOptionPrice = RaceOptionPrice_DB;
 
 export type Race = Race_DB & {
   address?: Address_DB | null;

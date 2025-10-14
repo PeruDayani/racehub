@@ -1,10 +1,10 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { addresses, races } from "../../drizzle/schema";
-import { db } from "../lib/db";
-import type { Race } from "../lib/types";
+import { addresses, raceOptions, races } from "../../drizzle/schema";
+import { db, type TransactionClient } from "../lib/db";
+import type { Race, RaceOption } from "../lib/types";
 import { getAuthenticatedUser } from "./utils";
 
 type CreateRaceResponseType = {
@@ -186,48 +186,61 @@ export async function updateRaceAction(
     const user = await getAuthenticatedUser();
     if (!user) return { success: false, message: "User not authenticated" };
 
-    const existingRace = await db.query.races.findFirst({
-      where: and(eq(races.id, race.id), eq(races.userId, user.id)),
+    let updatedRace: Race | undefined;
+    await db.transaction(async (tx) => {
+      const existingRace = await tx.query.races.findFirst({
+        where: and(eq(races.id, race.id), eq(races.userId, user.id)),
+      });
+
+      if (!existingRace) {
+        return {
+          success: false,
+          message: "Race not found or you don't have permission to update it",
+        };
+      }
+
+      // Update the Race Address
+      const addressId = await upsertAddress(
+        tx,
+        race.address,
+        existingRace.addressId,
+      );
+
+      // Update the Race
+      await tx
+        .update(races)
+        .set({
+          name: race.name,
+          date: race.date,
+          registrationDeadline: race.registrationDeadline,
+          status: race.status,
+          addressId,
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(races.id, race.id));
+
+      // Update the Race Options
+      await updateRaceOptions(tx, race.id, race.options);
+
+      // Get the updated race
+      updatedRace = await tx.query.races.findFirst({
+        where: eq(races.id, race.id),
+        with: {
+          address: true,
+          options: { with: { prices: true } },
+          sponsorships: true,
+          website: true,
+        },
+      });
     });
-
-    if (!existingRace) {
-      return {
-        success: false,
-        message: "Race not found or you don't have permission to update it",
-      };
-    }
-
-    const addressId = await upsertAddress(race.address, existingRace.addressId);
-
-    await db
-      .update(races)
-      .set({
-        name: race.name,
-        date: race.date,
-        registrationDeadline: race.registrationDeadline,
-        status: race.status,
-        addressId,
-        updatedAt: new Date().toISOString(),
-      })
-      .where(eq(races.id, race.id));
-
-    const updatedRace = await db.query.races.findFirst({
-      where: eq(races.id, race.id),
-      with: {
-        address: true,
-        options: { with: { prices: true } },
-        sponsorships: true,
-        website: true,
-      },
-    });
-
-    if (!updatedRace) {
-      return { success: false, message: "Failed to fetch updated race" };
-    }
 
     // Trigger revalidation in parallel (non-blocking)
     revalidatePath("/dashboard");
     revalidatePath(`/dashboard/edit-race/${race.id}`);
+
+    if (!updatedRace) {
+      return { success: false, message: "Failed to fetch updated race" };
+    }
 
     return {
       success: true,
@@ -246,7 +259,9 @@ export async function updateRaceAction(
 /**
  * Helper functions
  */
+
 async function upsertAddress(
+  tx: TransactionClient,
   address: Race["address"] | undefined,
   _existingAddressId: number | null,
 ): Promise<number | null> {
@@ -264,10 +279,79 @@ async function upsertAddress(
   };
 
   if (address.id) {
-    await db.update(addresses).set(payload).where(eq(addresses.id, address.id));
+    await tx.update(addresses).set(payload).where(eq(addresses.id, address.id));
     return address.id;
   }
 
-  const [newAddress] = await db.insert(addresses).values(payload).returning();
+  const [newAddress] = await tx.insert(addresses).values(payload).returning();
   return newAddress.id;
+}
+
+async function updateRaceOptions(
+  tx: TransactionClient,
+  raceId: number,
+  updatedOptions: RaceOption[],
+): Promise<void> {
+  const existingOptions = await tx.query.raceOptions.findMany({
+    where: eq(raceOptions.raceId, raceId),
+  });
+
+  const existingIds = existingOptions.map((option) => option.id);
+  const updatedIds = updatedOptions.map((option) => option.id);
+
+  // Delete the options that are not in the updated options
+  const optionsToDelete = existingIds.filter((id) => !updatedIds.includes(id));
+  await tx.delete(raceOptions).where(inArray(raceOptions.id, optionsToDelete));
+
+  // Update the options that are in the updated options
+  const optionsToUpdate = updatedOptions.filter((option) =>
+    existingOptions.some((existingOption) => existingOption.id === option.id),
+  );
+  for (const option of optionsToUpdate) {
+    await tx
+      .update(raceOptions)
+      .set({
+        name: option.name,
+        distanceKm: option.distanceKm,
+        startTime: option.startTime,
+        cutoffTime: option.cutoffTime,
+        courseMapUrl: option.courseMapUrl,
+        isVirtual: option.isVirtual,
+        isFree: option.isFree,
+        description: option.description,
+        ageMin: option.ageMin,
+        ageMax: option.ageMax,
+        genderCategory: option.genderCategory,
+        position: option.position,
+        updatedAt: new Date().toISOString(),
+      })
+      .where(eq(raceOptions.id, option.id));
+  }
+
+  // Create the options that are not in the existing options
+  const optionsToCreate = updatedOptions.filter(
+    (option) =>
+      !existingOptions.some(
+        (existingOption) => existingOption.id === option.id,
+      ),
+  );
+  for (const option of optionsToCreate) {
+    await tx.insert(raceOptions).values({
+      raceId: raceId,
+      name: option.name,
+      distanceKm: option.distanceKm,
+      startTime: option.startTime,
+      cutoffTime: option.cutoffTime,
+      courseMapUrl: option.courseMapUrl,
+      isVirtual: option.isVirtual,
+      isFree: option.isFree,
+      description: option.description,
+      ageMin: option.ageMin,
+      ageMax: option.ageMax,
+      genderCategory: option.genderCategory,
+      position: option.position,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+  }
 }

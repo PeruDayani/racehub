@@ -12,6 +12,9 @@ import PageHeader from "@/app/components/PageHeader.tsx/PageHeader";
 import CreateRace from "@/app/components/Race/CreateRace";
 import OrganizeRaceCard from "@/app/components/Race/OrganizeRaceCard";
 
+// Tell Next.js that this page depends on cookies
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const races = await getRacesByUserAction();
 

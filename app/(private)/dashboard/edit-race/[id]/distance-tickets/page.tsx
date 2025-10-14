@@ -1,3 +1,5 @@
+import DistanceTicketsEditor from "@/app/components/RaceEditor/DistanceTickets/DistanceTicketsEditor";
+
 export default async function DistanceTickets() {
-  return <div>Distance & Tickets</div>;
+  return <DistanceTicketsEditor />;
 }
