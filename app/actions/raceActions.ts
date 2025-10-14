@@ -2,9 +2,14 @@
 
 import { and, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { addresses, raceOptions, races } from "../../drizzle/schema";
+import {
+  addresses,
+  raceOptionPrices,
+  raceOptions,
+  races,
+} from "../../drizzle/schema";
 import { db, type TransactionClient } from "../lib/db";
-import type { Race, RaceOption } from "../lib/types";
+import type { Race, RaceOption, RaceOptionPrice } from "../lib/types";
 import { getAuthenticatedUser } from "./utils";
 
 type CreateRaceResponseType = {
@@ -183,6 +188,8 @@ export async function updateRaceAction(
   race: Race,
 ): Promise<UpdateRaceResponseType> {
   try {
+    console.log("updateRaceAction", race);
+
     const user = await getAuthenticatedUser();
     if (!user) return { success: false, message: "User not authenticated" };
 
@@ -326,6 +333,9 @@ async function updateRaceOptions(
         updatedAt: new Date().toISOString(),
       })
       .where(eq(raceOptions.id, option.id));
+
+    // Update the prices for this option
+    await updateRaceOptionPrices(tx, raceId, option.id, option.prices);
   }
 
   // Create the options that are not in the existing options
@@ -336,20 +346,89 @@ async function updateRaceOptions(
       ),
   );
   for (const option of optionsToCreate) {
-    await tx.insert(raceOptions).values({
+    const [newOption] = await tx
+      .insert(raceOptions)
+      .values({
+        raceId: raceId,
+        name: option.name,
+        distanceKm: option.distanceKm,
+        startTime: option.startTime,
+        cutoffTime: option.cutoffTime,
+        courseMapUrl: option.courseMapUrl,
+        isVirtual: option.isVirtual,
+        isFree: option.isFree,
+        description: option.description,
+        ageMin: option.ageMin,
+        ageMax: option.ageMax,
+        genderCategory: option.genderCategory,
+        position: option.position,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      })
+      .returning();
+
+    // Create the prices for this new option
+    if (newOption && option.prices.length > 0) {
+      await updateRaceOptionPrices(tx, raceId, newOption.id, option.prices);
+    }
+  }
+}
+
+async function updateRaceOptionPrices(
+  tx: TransactionClient,
+  raceId: number,
+  raceOptionId: number,
+  updatedPrices: RaceOptionPrice[],
+): Promise<void> {
+  // Get existing prices for race and race option
+  const existingPrices = await tx.query.raceOptionPrices.findMany({
+    where: and(
+      eq(raceOptionPrices.raceId, raceId),
+      eq(raceOptionPrices.raceOptionId, raceOptionId),
+    ),
+  });
+
+  const existingIds = existingPrices.map((price) => price.id);
+  const updatedIds = updatedPrices.map((price) => price.id);
+
+  // Delete the prices that are not in the updated prices
+  const pricesToDelete = existingIds.filter((id) => !updatedIds.includes(id));
+  if (pricesToDelete.length > 0) {
+    await tx
+      .delete(raceOptionPrices)
+      .where(inArray(raceOptionPrices.id, pricesToDelete));
+  }
+
+  // Update the prices that are in the updated prices
+  const pricesToUpdate = updatedPrices.filter((price) =>
+    existingPrices.some((existingPrice) => existingPrice.id === price.id),
+  );
+  for (const price of pricesToUpdate) {
+    await tx
+      .update(raceOptionPrices)
+      .set({
+        label: price.label,
+        priceCents: price.priceCents,
+        expiresAt: price.expiresAt,
+        maxParticipants: price.maxParticipants,
+        updatedAt: new Date().toISOString(),
+      })
+      .where(eq(raceOptionPrices.id, price.id));
+  }
+
+  // Create the prices that are not in the existing prices
+  const pricesToCreate = updatedPrices.filter(
+    (price) =>
+      !existingPrices.some((existingPrice) => existingPrice.id === price.id),
+  );
+  for (const price of pricesToCreate) {
+    await tx.insert(raceOptionPrices).values({
       raceId: raceId,
-      name: option.name,
-      distanceKm: option.distanceKm,
-      startTime: option.startTime,
-      cutoffTime: option.cutoffTime,
-      courseMapUrl: option.courseMapUrl,
-      isVirtual: option.isVirtual,
-      isFree: option.isFree,
-      description: option.description,
-      ageMin: option.ageMin,
-      ageMax: option.ageMax,
-      genderCategory: option.genderCategory,
-      position: option.position,
+      raceOptionId: raceOptionId,
+      label: price.label,
+      priceCents: price.priceCents,
+      expiresAt: price.expiresAt,
+      maxParticipants: price.maxParticipants,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });

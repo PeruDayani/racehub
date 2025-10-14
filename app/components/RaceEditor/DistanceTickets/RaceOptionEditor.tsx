@@ -2,8 +2,10 @@
 
 import {
   ActionIcon,
+  Button,
   Card,
   Collapse,
+  Divider,
   Grid,
   Group,
   NumberInput,
@@ -19,8 +21,9 @@ import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useRaceStore } from "@/app/context/RaceStoreContext";
 import { GENDER_CATEGORIES, PRESET_DISTANCES } from "@/app/lib/constants";
-import type { RaceOption } from "@/app/lib/types";
+import type { RaceOption, RaceOptionPrice } from "@/app/lib/types";
 import DistanceSelector from "./DistanceSelector";
+import PriceOptionEditor from "./PriceOptionEditor";
 
 interface RaceOptionEditorProps {
   optionId: number;
@@ -33,9 +36,13 @@ export default function RaceOptionEditor({
   option,
   index,
 }: RaceOptionEditorProps) {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState<boolean>(option.name !== null);
+
   const updateRaceOption = useRaceStore((state) => state.updateRaceOption);
   const deleteRaceOption = useRaceStore((state) => state.deleteRaceOption);
+
+  const priceOptions = useRaceStore((state) => state.getPriceOptions(optionId));
+  const addPriceOption = useRaceStore((state) => state.addPriceOption);
 
   const onUpdate = (field: keyof RaceOption, value: any) => {
     updateRaceOption({ ...option, [field]: value });
@@ -68,30 +75,35 @@ export default function RaceOptionEditor({
     <Card withBorder shadow="sm" radius="md" p="lg">
       <Stack gap="xs">
         <Group justify="space-between" align="center">
-          <Group gap="xs">
+          <Group gap="xs" align="center">
             <ActionIcon
               variant="subtle"
               color="gray"
+              size="sm"
               onClick={() => setCollapsed(!collapsed)}
               aria-label={collapsed ? "Expand" : "Collapse"}
+              mt={2}
             >
-              {collapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+              {collapsed ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
             </ActionIcon>
-            <Text fw={500}>
-              Race Option {index + 1}: {option.name}
-            </Text>
+            <div>
+              <Text fw={500} size="lg">
+                Race Option {index + 1}: {option.name || "Untitled"}
+              </Text>
+              <Text size="sm" c="dimmed">
+                {getSummary()}
+              </Text>
+            </div>
           </Group>
           <ActionIcon
             color="red"
             variant="subtle"
+            size="sm"
             onClick={() => deleteRaceOption(optionId)}
           >
-            <Trash2 size={18} />
+            <Trash2 size={16} />
           </ActionIcon>
         </Group>
-        <Text size="sm" fs="italic" c="dimmed">
-          {getSummary()}
-        </Text>
       </Stack>
 
       <Collapse in={!collapsed}>
@@ -211,6 +223,29 @@ export default function RaceOptionEditor({
           </Grid>
         </Stack>
       </Collapse>
+
+      <Stack pt="lg" gap="lg">
+        <Divider />
+
+        {/* Price Options */}
+        <Group justify="space-between" align="center">
+          <Text size="md" fw={500}>
+            Ticket Options
+          </Text>
+          <Button variant="light" onClick={() => addPriceOption(optionId)}>
+            Add Ticket Option
+          </Button>
+        </Group>
+
+        {priceOptions.map((priceOption: RaceOptionPrice, index: number) => (
+          <PriceOptionEditor
+            key={priceOption.id}
+            index={index}
+            raceOptionId={optionId}
+            priceOption={priceOption}
+          />
+        ))}
+      </Stack>
     </Card>
   );
 }

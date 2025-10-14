@@ -79,12 +79,13 @@ export const raceOptionPrices = pgTable("race_option_prices", {
   raceOptionId: integer("race_option_id")
     .notNull()
     .references(() => raceOptions.id, { onDelete: "cascade" }),
+
   label: text("label"),
   priceCents: integer("price_cents"),
+
+  expiresAt: timestamp("expires_at", { mode: "string" }),
   maxParticipants: integer("max_participants"),
-  startsAt: timestamp("starts_at", { mode: "string" }),
-  endsAt: timestamp("ends_at", { mode: "string" }),
-  position: integer("position"),
+
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });

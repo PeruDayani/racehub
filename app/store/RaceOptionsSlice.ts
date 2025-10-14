@@ -12,10 +12,10 @@ export type RaceOptionsSliceActions = {
   reorderRaceOptions: (newOrder: RaceOption[]) => void;
 
   // Race Option Prices
-  addPrice: (optionId: number, price: RaceOptionPrice) => void;
-  updatePrice: (optionId: number, price: RaceOptionPrice) => void;
-  deletePrice: (optionId: number, priceId: number) => void;
-  reorderPrices: (optionId: number, newOrder: RaceOptionPrice[]) => void;
+  getPriceOptions: (optionId: number) => RaceOptionPrice[];
+  addPriceOption: (optionId: number, price: RaceOptionPrice) => void;
+  updatePriceOption: (optionId: number, price: RaceOptionPrice) => void;
+  deletePriceOption: (optionId: number, priceId: number) => void;
 
   // Debug
   debugRaceOptions: () => void;
@@ -43,7 +43,7 @@ export const createRaceOptionsSlice =
             cutoffTime: null,
             courseMapUrl: null,
             isVirtual: false,
-            isFree: false,
+            isFree: true,
             description: null,
             ageMin: null,
             ageMax: null,
@@ -77,41 +77,47 @@ export const createRaceOptionsSlice =
           state.race.options = newOrder;
         }),
 
-      addPrice: (optionId, price) =>
+      getPriceOptions: (raceOptionId) => {
+        const option = get().race.options.find((o) => o.id === raceOptionId);
+        return option?.prices ?? [];
+      },
+
+      addPriceOption: (raceOptionId) =>
         set((state) => {
-          const option = state.race.options.find((o) => o.id === optionId);
+          const option = state.race.options.find((o) => o.id === raceOptionId);
           if (option) {
-            price.position = option.prices.length;
+            const price = {
+              id: Math.random() * 1000,
+              raceId: state.race.id,
+              raceOptionId: raceOptionId,
+              label: "",
+              priceCents: 0,
+              expiresAt: null,
+              maxParticipants: null,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            };
+
             option.prices.push(price);
           }
         }),
 
-      updatePrice: (optionId, price) =>
+      updatePriceOption: (raceOptionId, price) =>
         set((state) => {
-          const option = state.race.options.find((o) => o.id === optionId);
+          const option = state.race.options.find((o) => o.id === raceOptionId);
           if (!option) return;
           const existing = option.prices.find((p) => p.id === price.id);
           if (existing) Object.assign(existing, price);
         }),
 
-      deletePrice: (optionId, priceId) =>
+      deletePriceOption: (raceOptionId, priceId) =>
         set((state) => {
-          const option = state.race.options.find((o) => o.id === optionId);
+          const option = state.race.options.find((o) => o.id === raceOptionId);
           if (option) {
             option.prices = option.prices.filter((p) => p.id !== priceId);
           }
         }),
 
-      reorderPrices: (optionId, newOrder) =>
-        set((state) => {
-          const option = state.race.options.find((o) => o.id === optionId);
-          if (option) {
-            newOrder.forEach((p, i) => {
-              p.position = i;
-            });
-            option.prices = newOrder;
-          }
-        }),
       debugRaceOptions: () => {
         console.log(get().race.options);
       },
