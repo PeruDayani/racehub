@@ -238,7 +238,7 @@ export default function SideNav() {
         <Divider />
 
         {/* Save button */}
-        <Stack gap={4} p="xs" align="center">
+        <Stack gap={8} p="xs" align="center">
           {isCollapsed ? (
             <Tooltip label="Save Race" position="right">
               <ActionIcon
@@ -252,16 +252,29 @@ export default function SideNav() {
               </ActionIcon>
             </Tooltip>
           ) : (
-            <Button
-              variant="light"
-              size="md"
-              radius="md"
-              onClick={handleSaveRace}
-              fullWidth
-              loading={isSaving}
-            >
-              {isSaving ? "Saving..." : "Save Race"}
-            </Button>
+            <>
+              <Button
+                variant="light"
+                size="md"
+                radius="md"
+                onClick={handleSaveRace}
+                fullWidth
+                loading={isSaving}
+              >
+                {isSaving ? "Saving..." : "Save Race"}
+              </Button>
+              <Button
+                variant="light"
+                size="md"
+                radius="md"
+                component={Link}
+                href={`/dashboard/preview-race/${raceId}`}
+                fullWidth
+                target="_blank"
+              >
+                Preview Site
+              </Button>
+            </>
           )}
         </Stack>
 
