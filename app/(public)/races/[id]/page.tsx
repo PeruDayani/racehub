@@ -26,15 +26,13 @@ import Link from "next/link";
 import { getRaceAction } from "@/app/actions/raceActions";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 
-type PreviewRacePageProps = {
-  params: { id: string };
-  children: React.ReactNode;
-};
-
-export default async function PreviewRacePage({
+export default async function RacePage({
   params,
-}: PreviewRacePageProps) {
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
+
   const race = await getRaceAction(parseInt(id, 10));
 
   if (!race.success || !race.data?.race) {
@@ -65,7 +63,7 @@ export default async function PreviewRacePage({
     });
   };
 
-  const getStatusColor = (status: string) => {
+  const _getStatusColor = (status: string) => {
     switch (status) {
       case "published":
         return "green";
@@ -80,28 +78,9 @@ export default async function PreviewRacePage({
 
   return (
     <Container size="xl" py="xl">
-      {/* Preview Banner */}
-      <Alert
-        icon={<Info size={16} />}
-        title="Preview Mode"
-        color="blue"
-        variant="light"
-        mb="lg"
-      >
-        This is a preview of how your race will appear to participants. This
-        page is only visible to you.
-      </Alert>
-
       <Stack gap="md">
         {/* Header Section */}
         <Group justify="flex-start" align="center" mb="md">
-          <Badge
-            color={getStatusColor(raceData.status)}
-            variant="light"
-            size="lg"
-          >
-            {raceData.status.toUpperCase()}
-          </Badge>
           {raceData.options.some((opt) => opt.isVirtual) && (
             <Badge color="blue" variant="light" size="lg">
               VIRTUAL

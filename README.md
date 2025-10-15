@@ -64,8 +64,6 @@ TODO:
 ### Okay, up next
 
 - Great fucking work.
-- Wire up the race website inputs next
-- Wire up a very simple race preview page
 - Wire up a very simple race public page
 
 - STRIPE!!
