@@ -35,7 +35,7 @@ export default async function DashboardPage() {
         <Divider />
 
         <Group justify="space-between" align="center">
-          <PageHeader title="Your Races" titleOrder={3} />
+          <PageHeader title="(Organizer) Your Races" titleOrder={3} />
           <CreateRace />
         </Group>
 

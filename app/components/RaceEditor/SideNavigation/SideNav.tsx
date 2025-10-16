@@ -274,6 +274,17 @@ export default function SideNav() {
               >
                 Preview Site
               </Button>
+              <Button
+                variant="light"
+                size="md"
+                radius="md"
+                component={Link}
+                href={`/races/${raceId}`}
+                fullWidth
+                target="_blank"
+              >
+                Live Site
+              </Button>
             </>
           )}
         </Stack>

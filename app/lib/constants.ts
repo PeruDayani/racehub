@@ -1,4 +1,10 @@
-export const PUBLIC_ROUTES = ["/auth", "/home", "/about", "/races"];
+export const PUBLIC_ROUTES = [
+  "/auth",
+  "/home",
+  "/about",
+  "/races",
+  "/api/stripe/webhook",
+];
 
 // Profile dropdown options
 export const GENDER_OPTIONS = [

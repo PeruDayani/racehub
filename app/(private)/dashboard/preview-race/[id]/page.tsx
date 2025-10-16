@@ -2,7 +2,6 @@ import {
   Alert,
   Badge,
   Box,
-  Button,
   Card,
   Container,
   Divider,
@@ -14,16 +13,9 @@ import {
   ThemeIcon,
   Title,
 } from "@mantine/core";
-import {
-  Calendar,
-  Clock,
-  ExternalLink,
-  Info,
-  MapPin,
-  Users,
-} from "lucide-react";
-import Link from "next/link";
+import { Calendar, Clock, Info, MapPin, Users } from "lucide-react";
 import { getRaceAction } from "@/app/actions/raceActions";
+import CheckoutButton from "@/app/components/CheckoutButton/CheckoutButton";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 
 type PreviewRacePageProps = {
@@ -46,7 +38,7 @@ export default async function PreviewRacePage({
   const { race: raceData } = race.data;
   const { options } = raceData;
 
-  const formatPrice = (priceCents: number | null) => {
+  const _formatPrice = (priceCents: number | null) => {
     if (!priceCents) return "Free";
     return `$${(priceCents / 100).toFixed(2)}`;
   };
@@ -252,33 +244,13 @@ export default async function PreviewRacePage({
                   ) : (
                     <Stack gap="sm">
                       {option.prices.map((price) => (
-                        <Button
+                        <CheckoutButton
                           key={price.id}
-                          fullWidth
-                          size="lg"
-                          variant="filled"
-                          color={option.isFree ? "green" : "blue"}
-                          rightSection={<ExternalLink size={16} />}
-                          component={Link}
-                          href={`/checkout/?raceId=${raceData.id}&raceOptionId=${option.id}&priceId=${price.id}`}
-                          radius="md"
-                        >
-                          <Group justify="space-between" w="100%">
-                            <Box ta="left">
-                              <Text size="sm" fw={500}>
-                                {price.label || "Standard Price"}
-                              </Text>
-                              {price.expiresAt && (
-                                <Text size="xs" opacity={0.8}>
-                                  Expires: {formatDate(price.expiresAt)}
-                                </Text>
-                              )}
-                            </Box>
-                            <Text fw={700} size="lg">
-                              {formatPrice(price.priceCents)}
-                            </Text>
-                          </Group>
-                        </Button>
+                          raceId={raceData.id}
+                          raceName={raceData.name}
+                          raceOption={option}
+                          raceOptionPrice={price}
+                        />
                       ))}
                     </Stack>
                   )}

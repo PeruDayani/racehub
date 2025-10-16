@@ -76,20 +76,27 @@ type GetRaceResponseType = {
   };
 };
 
-export async function getRaceAction(id: number): Promise<GetRaceResponseType> {
+export async function getRaceAction(
+  id: number,
+  skipAuth: boolean = false,
+): Promise<GetRaceResponseType> {
   try {
     // Get the authenticated user
     const user = await getAuthenticatedUser();
 
-    if (!user) {
+    if (!user && !skipAuth) {
       return {
         success: false,
         message: "User not authenticated",
       };
     }
 
+    const whereClause = skipAuth
+      ? eq(races.id, id)
+      : and(eq(races.id, id), eq(races.userId, user?.id || ""));
+
     const race = await db.query.races.findFirst({
-      where: and(eq(races.id, id), eq(races.userId, user.id)),
+      where: whereClause,
       with: {
         address: true,
         options: {

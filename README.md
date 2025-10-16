@@ -64,12 +64,19 @@ TODO:
 ### Okay, up next
 
 - Great fucking work.
-- Wire up a very simple race public page
 
 - STRIPE!!
+- Good progress
+- Save the ticket next
+- Deploy to prod
+- View the ticket in the dashboard
 - Focus in on the ticket workflow.
 
 And then after that we have:
+- Make User Auth a top level context
+- Make Sign In / Sign Up modals
+- Sign In -> Sign Up losses the redirect url
+
 - Dashboard stats
 - Racer ticket view
 - QR codes
