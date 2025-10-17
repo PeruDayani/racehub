@@ -119,6 +119,10 @@ export const createRaceOptionsSlice =
         }),
 
       debugRaceOptions: () => {
+        console.log(
+          "%c Race Options",
+          "color: blue; font-weight: bold; font-size: 1.5rem;",
+        );
         console.log(get().race.options);
       },
     };

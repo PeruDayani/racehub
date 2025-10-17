@@ -19,7 +19,6 @@ export default function CreateRace() {
       e.preventDefault();
 
       if (!raceName.trim()) {
-        console.log("Race name is required");
         return;
       }
 
@@ -27,7 +26,6 @@ export default function CreateRace() {
 
       try {
         const result = await createRaceAction(raceName);
-        console.log("createRaceAction response:", result);
 
         if (result.success && result.data?.raceId) {
           // Reset form and close modal on success

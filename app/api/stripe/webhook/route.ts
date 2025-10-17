@@ -13,8 +13,6 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!,
     );
 
-    console.log("✅ Event:", event);
-
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object;

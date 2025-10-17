@@ -5,7 +5,7 @@ Take 2!
 Local supabase setup:
 - Run supabase locally using docker for testing.
 - `supabase init` to create a config folder
-- `supabase start` to start the supabase server in docker
+- `supabase start` to start the supabase server in dockernpm
 - `supabase stop` to stop the docker instance, data will persist.
 
 Local supbase info
@@ -56,6 +56,32 @@ Overview
 - Switch the DATABASE_URL in .env
 - Run `npm run migrate`
 - Can I wire this up to a Vercel action somehow?
+
+### Stripe!!
+- There's so much happening here, and so much more to do
+- Everything starts in the Stripe dashboard: https://dashboard.stripe.com/acct_1SCM6MJHWd8FMlJA/test/payments
+- The STRIPE_SECRET_KEY and NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY define which stripe project/env we are connected to. Both local and prod are currently pointing to the Sandbox env.
+
+- Once we are connected to a Stripe account, the magic starts from the CheckoutButton.tsx
+- We require Auth to buy a ticket.
+- We call the /api/stripe/checkout endpoint which gives us a URL for the stripe connect page
+- This API endpoint passes in a PriceObject to the stripe checkout session. The Metadata passed in gets passed through the webhook to our api endpoint.
+- TODO: How can we add Taxes, Discounts, Multiple Tickets, etc???
+- We redirect the users to this page
+- This page handles checkout
+- On successfully checkout, a Webhook (configured on the Stripe Dashboard) is triggered
+- We are currently only listening to the checkout.session.completed on the Sandbox webhook.
+- STRIPE_WEBHOOK_SECRET is the Webhook secret key. 
+- This webhook calls the /api/stripe/webhook route
+- We can then save our ticket in the DB and send emails and whatever else.
+
+- For local testing
+- In a new Iterm run `stripe listen --forward-to localhost:3000/api/stripe/webhook`
+- This will give you a STRIPE_WEBHOOK_SECRET for local testing
+- TODO: How can I have one sandbox webhook for prod and another one for local??
+- Disabling the webhook seemed to have worked. But that'll be a headache.
+- Having both the webhook and local listener results in both getting called, which will mess up the prod DB during local dev.
+- Probably two sandboxes is the way to go. Dev and Stg.
 
 TODO:
 - How to define RLS for Supabase?
