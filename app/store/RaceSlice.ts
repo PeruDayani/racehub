@@ -1,6 +1,7 @@
 import type { StateCreator } from "zustand";
 import {
   getUserRaceByIdAction,
+  markRaceAsLiveAction,
   updateRaceAction,
 } from "../actions/raceActions";
 import type { Race } from "../lib/types";
@@ -18,6 +19,7 @@ export type RaceSliceActions = {
   getRace: () => Race;
   updateRaceField: (field: keyof Race, value: any) => void;
   saveRace: () => Promise<{ success: boolean; message: string }>;
+  markRaceAsLive: () => Promise<{ success: boolean; message: string }>;
 
   debugRace: () => void;
 };
@@ -85,6 +87,25 @@ export const createRaceSlice =
             success: false,
             message: "Failed to update race",
           };
+        } finally {
+          set({ isSaving: false });
+        }
+      },
+
+      markRaceAsLive: async () => {
+        const { race } = get();
+
+        set({ isSaving: true });
+
+        try {
+          const { success, message } = await markRaceAsLiveAction(race.id);
+          if (success) {
+            set({ race: { ...race, status: "live" } });
+          }
+          return { success, message };
+        } catch (error) {
+          console.error("Error marking race as live", error);
+          return { success: false, message: "Failed to mark race as live" };
         } finally {
           set({ isSaving: false });
         }

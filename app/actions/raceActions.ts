@@ -320,7 +320,6 @@ export async function updateRaceAction(
           name: race.name,
           date: race.date,
           registrationDeadline: race.registrationDeadline,
-          status: race.status,
           sponsorships: race.sponsorships,
           website: race.website,
           addressId,
@@ -359,6 +358,59 @@ export async function updateRaceAction(
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to update race",
+    };
+  }
+}
+
+type MarkRaceAsLiveResponseType = {
+  success: boolean;
+  message: string;
+};
+
+export async function markRaceAsLiveAction(
+  raceId: number,
+): Promise<MarkRaceAsLiveResponseType> {
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user) return { success: false, message: "User not authenticated" };
+
+    const race = await db.query.races.findFirst({
+      where: and(eq(races.id, raceId), eq(races.userId, user.id)),
+      with: {
+        address: true,
+        options: {
+          with: {
+            prices: true,
+          },
+        },
+      },
+    });
+
+    if (!race) return { success: false, message: "Race not found" };
+
+    if (race.status === "live")
+      return { success: false, message: "Race is already live" };
+
+    // TODO: Improve this validation
+    // TODO: We should run validation on race updates as well
+    if (!race.name) return { success: false, message: "Race name is required" };
+    if (!race.date) return { success: false, message: "Race date is required" };
+    if (!race.registrationDeadline)
+      return { success: false, message: "Registration deadline is required" };
+    if (!race.address)
+      return { success: false, message: "Race address is required" };
+    if (!race.options.length)
+      return { success: false, message: "Atleasy one race option is required" };
+
+    await db.update(races).set({ status: "live" }).where(eq(races.id, raceId));
+
+    return { success: true, message: "Race marked as live" };
+  } catch (error) {
+    console.error("Error marking race as live:", error);
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to mark race as live",
     };
   }
 }

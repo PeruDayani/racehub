@@ -119,8 +119,11 @@ export default function SideNav() {
   const raceName = useRaceStore((state) => state.race.name);
   const raceId = useRaceStore((state) => state.race.id);
   const raceSlug = useRaceStore((state) => state.race.slug);
+  const raceStatus = useRaceStore((state) => state.race.status);
   const isSaving = useRaceStore((state) => state.isSaving);
+
   const saveRace = useRaceStore((state) => state.saveRace);
+  const markRaceAsLive = useRaceStore((state) => state.markRaceAsLive);
 
   const handleSaveRace = useCallback(async () => {
     const notificationId = notifications.show({
@@ -160,10 +163,53 @@ export default function SideNav() {
     }
   }, [saveRace]);
 
+  const handleMarkRaceAsLive = useCallback(async () => {
+    const notificationId = notifications.show({
+      title: "Marking race as live...",
+      message: "Please wait while we mark your race as live.",
+      loading: true,
+      autoClose: false,
+      withCloseButton: false,
+      color: "cyan",
+    });
+
+    try {
+      const { success, message } = await markRaceAsLive();
+
+      notifications.update({
+        id: notificationId,
+        title: success ? "Race marked as live" : "Race not marked as live",
+        message:
+          message ??
+          (success
+            ? "Your race has been marked as live."
+            : "Failed to mark race as live."),
+        color: success ? "green" : "red",
+        loading: false,
+        autoClose: 2500,
+        withCloseButton: true,
+      });
+    } catch (error) {
+      console.error("Error marking race as live:", error);
+      notifications.update({
+        id: notificationId,
+        title: "Race not marked as live",
+        message:
+          "An unexpected error occurred while marking your race as live.",
+        color: "red",
+        loading: false,
+        autoClose: 4000,
+        withCloseButton: true,
+      });
+    }
+  }, [markRaceAsLive]);
+
   const links = useMemo(
     () =>
       NAV_LINKS.map((link) => {
-        const href = `/dashboard/edit-race/${raceId}${link.value ? `/${link.value}` : ""}`;
+        const href = `/dashboard/edit-race/${raceId}${
+          link.value ? `/${link.value}` : ""
+        }`;
         const isActive = pathname === href;
 
         if (isCollapsed) {
@@ -264,28 +310,43 @@ export default function SideNav() {
               >
                 {isSaving ? "Saving..." : "Save Race"}
               </Button>
-              <Button
-                variant="light"
-                size="md"
-                radius="md"
-                component={Link}
-                href={`/dashboard/preview-race/${raceId}`}
-                fullWidth
-                target="_blank"
-              >
-                Preview Site
-              </Button>
-              <Button
-                variant="light"
-                size="md"
-                radius="md"
-                component={Link}
-                href={`/races/${raceSlug}`}
-                fullWidth
-                target="_blank"
-              >
-                Live Site
-              </Button>
+              {raceStatus === "live" && (
+                <Button
+                  variant="light"
+                  size="md"
+                  radius="md"
+                  component={Link}
+                  href={`/races/${raceSlug}`}
+                  fullWidth
+                  target="_blank"
+                >
+                  View Live Website
+                </Button>
+              )}
+              {raceStatus === "draft" && (
+                <>
+                  <Button
+                    variant="light"
+                    size="md"
+                    radius="md"
+                    component={Link}
+                    href={`/dashboard/preview-race/${raceId}`}
+                    fullWidth
+                    target="_blank"
+                  >
+                    Preview Race Website
+                  </Button>
+                  <Button
+                    variant="light"
+                    size="md"
+                    radius="md"
+                    onClick={handleMarkRaceAsLive}
+                    fullWidth
+                  >
+                    Publish Race
+                  </Button>
+                </>
+              )}
             </>
           )}
         </Stack>

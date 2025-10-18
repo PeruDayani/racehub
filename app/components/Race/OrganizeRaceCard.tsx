@@ -37,7 +37,7 @@ export default function OrganizeRaceCard({ race }: OrganizeRaceCardProps) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "published":
+      case "live":
         return "green";
       case "draft":
         return "gray";
@@ -88,7 +88,7 @@ export default function OrganizeRaceCard({ race }: OrganizeRaceCardProps) {
           <Badge
             color={getStatusColor(race.status)}
             leftSection={
-              race.status === "draft" ? (
+              race.status === "live" ? (
                 <CheckCircle size={12} />
               ) : (
                 <FileText size={12} />
