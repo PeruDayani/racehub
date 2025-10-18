@@ -13,6 +13,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
+import { DEFAULT_WEBSITE } from "@/app/lib/constants";
 import type { RaceStatus, Sponsorship, Website } from "@/app/lib/types";
 
 // =============================
@@ -52,7 +53,7 @@ export const races = pgTable("races", {
     .$type<Sponsorship[]>()
     .default([])
     .notNull(),
-  website: jsonb("website").$type<Website>(),
+  website: jsonb("website").$type<Website>().notNull().default(DEFAULT_WEBSITE),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });

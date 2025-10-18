@@ -56,10 +56,13 @@ export type Website = {
   description: string;
   logoUrl?: string;
   bannerUrl?: string;
-  sections: {
-    name: string;
-    content: string;
-  }[];
+  sections: WebsiteSection[];
+};
+
+export type WebsiteSection = {
+  id: string;
+  name: string;
+  content: string;
 };
 
 export type Sponsorship = {

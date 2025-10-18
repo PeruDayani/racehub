@@ -85,6 +85,13 @@
       "when": 1760826306861,
       "tag": "0011_aberrant_iron_lad",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1760828456655,
+      "tag": "0012_high_sunspot",
+      "breakpoints": true
     }
   ]
 }

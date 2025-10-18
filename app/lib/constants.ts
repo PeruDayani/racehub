@@ -1,3 +1,5 @@
+import type { Website } from "./types";
+
 export const PUBLIC_ROUTES = [
   "/auth",
   "/home",
@@ -43,3 +45,8 @@ export const GENDER_CATEGORIES = [
   { value: "female", label: "Female" },
   { value: "non-binary", label: "Non-binary" },
 ];
+
+export const DEFAULT_WEBSITE: Website = {
+  description: "",
+  sections: [],
+};

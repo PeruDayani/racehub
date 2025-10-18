@@ -63,18 +63,6 @@ const NAV_LINKS: NavLinkItem[] = [
     icon: Ticket,
   },
   {
-    label: "Payment Configuration",
-    value: "payment",
-    description: "Setup payment processing",
-    icon: CreditCard,
-  },
-  {
-    label: "Waivers",
-    value: "waivers",
-    description: "Liability waivers and agreements",
-    icon: FileText,
-  },
-  {
     label: "Sponsorships",
     value: "sponsorships",
     description: "Manage race sponsors",
@@ -85,6 +73,18 @@ const NAV_LINKS: NavLinkItem[] = [
     value: "website",
     description: "Customize race website",
     icon: Globe,
+  },
+  {
+    label: "Payment Configuration",
+    value: "payment",
+    description: "Setup payment processing",
+    icon: CreditCard,
+  },
+  {
+    label: "Waivers",
+    value: "waivers",
+    description: "Liability waivers and agreements",
+    icon: FileText,
   },
   {
     label: "Discounts",

@@ -11,10 +11,14 @@ import {
   createSponsorshipSlice,
   type SponsorshipSlice,
 } from "./SponsorshipSlice";
+import { createWebsiteSlice, type WebsiteSlice } from "./WebsiteSlice";
 
 enableMapSet();
 
-export type RaceStore = RaceSlice & RaceOptionsSlice & SponsorshipSlice;
+export type RaceStore = RaceSlice &
+  RaceOptionsSlice &
+  SponsorshipSlice &
+  WebsiteSlice;
 
 export const createRaceStore = (initialRace: Race) => {
   return createStore<RaceStore>()(
@@ -22,6 +26,7 @@ export const createRaceStore = (initialRace: Race) => {
       ...createRaceSlice(initialRace)(...args),
       ...createRaceOptionsSlice()(...args),
       ...createSponsorshipSlice()(...args),
+      ...createWebsiteSlice()(...args),
     })),
   );
 };

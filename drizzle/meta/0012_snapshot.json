@@ -1,6 +1,6 @@
 {
-  "id": "28376302-6da8-4b78-84b9-05dabc9ab447",
-  "prevId": "c67d6fb9-5acf-479a-bb62-199c012e5c6e",
+  "id": "82f1d7a8-62a4-4510-af61-8f57285b6d77",
+  "prevId": "28376302-6da8-4b78-84b9-05dabc9ab447",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -165,8 +165,12 @@
           "tableFrom": "profiles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": ["id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -174,8 +178,12 @@
           "name": "profiles_address_id_addresses_id_fk",
           "tableFrom": "profiles",
           "tableTo": "addresses",
-          "columnsFrom": ["address_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "address_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -253,8 +261,12 @@
           "name": "race_option_prices_race_id_races_id_fk",
           "tableFrom": "race_option_prices",
           "tableTo": "races",
-          "columnsFrom": ["race_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "race_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -262,8 +274,12 @@
           "name": "race_option_prices_race_option_id_race_options_id_fk",
           "tableFrom": "race_option_prices",
           "tableTo": "race_options",
-          "columnsFrom": ["race_option_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "race_option_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -386,8 +402,12 @@
           "name": "race_options_race_id_races_id_fk",
           "tableFrom": "race_options",
           "tableTo": "races",
-          "columnsFrom": ["race_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "race_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -462,7 +482,8 @@
           "name": "website",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'{\"description\":\"\",\"sections\":[]}'::jsonb"
         },
         "created_at": {
           "name": "created_at",
@@ -486,8 +507,12 @@
           "tableFrom": "races",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -495,8 +520,12 @@
           "name": "races_addressId_addresses_id_fk",
           "tableFrom": "races",
           "tableTo": "addresses",
-          "columnsFrom": ["addressId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "addressId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -506,7 +535,9 @@
         "races_slug_unique": {
           "name": "races_slug_unique",
           "nullsNotDistinct": false,
-          "columns": ["slug"]
+          "columns": [
+            "slug"
+          ]
         }
       },
       "policies": {},
