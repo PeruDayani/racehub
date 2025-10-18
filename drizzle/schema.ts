@@ -13,6 +13,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
+import type { RaceStatus, Sponsorship, Website } from "@/app/lib/types";
 
 // =============================
 // Tables
@@ -41,11 +42,17 @@ export const races = pgTable("races", {
   userId: uuid("user_id").references(() => authUsers.id, {
     onDelete: "no action",
   }),
-  status: text("status").notNull().default("draft"),
+  status: text("status").$type<RaceStatus>().notNull().default("draft"),
   name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
   addressId: integer("addressId").references(() => addresses.id),
   date: date("date"),
   registrationDeadline: date("registration_deadline"),
+  sponsorships: jsonb("sponsorships")
+    .$type<Sponsorship[]>()
+    .default([])
+    .notNull(),
+  website: jsonb("website").$type<Website>(),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
@@ -90,35 +97,6 @@ export const raceOptionPrices = pgTable("race_option_prices", {
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
 
-export const sponsorships = pgTable("sponsorships", {
-  id: serial("id").primaryKey().notNull(),
-  raceId: integer("race_id")
-    .notNull()
-    .references(() => races.id, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  description: text("description"),
-  logoUrl: text("logo_url"),
-  websiteUrl: text("website_url"),
-  tier: text("tier").notNull(),
-  displayOrder: integer("display_order").notNull().default(0),
-  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
-});
-
-export const raceWebsites = pgTable("race_websites", {
-  id: serial("id").primaryKey().notNull(),
-  raceId: integer("race_id")
-    .notNull()
-    .references(() => races.id, { onDelete: "cascade" }),
-  slug: text("slug").notNull().unique(),
-  description: text("description"),
-  logoUrl: text("logo_url"),
-  bannerUrl: text("banner_url"),
-  sections: jsonb("sections"),
-  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
-});
-
 export const addresses = pgTable("addresses", {
   id: serial().primaryKey().notNull(),
   type: text().notNull(),
@@ -150,11 +128,6 @@ export const racesRelations = relations(races, ({ one, many }) => ({
   }),
   options: many(raceOptions),
   optionPrices: many(raceOptionPrices),
-  sponsorships: many(sponsorships),
-  website: one(raceWebsites, {
-    fields: [races.id],
-    references: [raceWebsites.raceId],
-  }),
 }));
 
 export const raceOptionsRelations = relations(raceOptions, ({ one, many }) => ({
@@ -178,17 +151,3 @@ export const raceOptionPricesRelations = relations(
     }),
   }),
 );
-
-export const sponsorshipsRelations = relations(sponsorships, ({ one }) => ({
-  race: one(races, {
-    fields: [sponsorships.raceId],
-    references: [races.id],
-  }),
-}));
-
-export const raceWebsitesRelations = relations(raceWebsites, ({ one }) => ({
-  race: one(races, {
-    fields: [raceWebsites.raceId],
-    references: [races.id],
-  }),
-}));

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { createRaceAction } from "@/app/actions/raceActions";
 
-export default function CreateRace() {
+export default function CreateRaceButton() {
   const [opened, { open, close }] = useDisclosure(false);
   const [raceName, setRaceName] = useState("");
   const [isLoading, setIsLoading] = useState(false);

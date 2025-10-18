@@ -88,7 +88,7 @@ export default function OrganizeRaceCard({ race }: OrganizeRaceCardProps) {
           <Badge
             color={getStatusColor(race.status)}
             leftSection={
-              race.status === "published" ? (
+              race.status === "draft" ? (
                 <CheckCircle size={12} />
               ) : (
                 <FileText size={12} />

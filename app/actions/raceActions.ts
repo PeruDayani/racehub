@@ -2,6 +2,7 @@
 
 import { and, eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import slugify from "slugify";
 import {
   addresses,
   raceOptionPrices,
@@ -11,6 +12,103 @@ import {
 import { db, type TransactionClient } from "../lib/db";
 import type { Race, RaceOption, RaceOptionPrice } from "../lib/types";
 import { getAuthenticatedUser } from "./utils";
+
+/**
+ * Live races actions that do not require authentication
+ */
+
+type GetLiveRaceBySlugResponseType = {
+  success: boolean;
+  message: string;
+  data?: {
+    race: Race;
+  };
+};
+
+export async function getLiveRaceBySlugAction(
+  slug: string,
+): Promise<GetLiveRaceBySlugResponseType> {
+  console.log("getLiveRaceBySlugAction", slug);
+
+  try {
+    const race = await db.query.races.findFirst({
+      where: and(eq(races.slug, slug), eq(races.status, "live")),
+      with: {
+        address: true,
+        options: {
+          with: {
+            prices: true,
+          },
+        },
+      },
+    });
+
+    if (!race) {
+      return {
+        success: false,
+        message: "Race not found",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Race found",
+      data: {
+        race,
+      },
+    };
+  } catch (error) {
+    console.error("Error getting public race:", error);
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to get public race",
+    };
+  }
+}
+
+type GetLiveRacesResponseType = {
+  success: boolean;
+  message: string;
+  data?: {
+    races: Race[];
+  };
+};
+
+export async function getLiveRacesAction(): Promise<GetLiveRacesResponseType> {
+  try {
+    const publicRaces = await db.query.races.findMany({
+      where: eq(races.status, "live"),
+      with: {
+        address: true,
+        options: {
+          with: {
+            prices: true,
+          },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "Public races found",
+      data: {
+        races: publicRaces,
+      },
+    };
+  } catch (error) {
+    console.error("Error getting public races:", error);
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to get public races",
+    };
+  }
+}
+
+/**
+ * User races actions that require authentication - create, get, update, delete
+ */
 
 type CreateRaceResponseType = {
   success: boolean;
@@ -39,6 +137,12 @@ export async function createRaceAction(
       .values({
         userId: user.id,
         name,
+        slug: slugify(name, { lower: true, strict: true }),
+        sponsorships: [],
+        website: {
+          description: "",
+          sections: [],
+        },
       })
       .returning();
 
@@ -68,7 +172,7 @@ export async function createRaceAction(
   }
 }
 
-type GetRaceResponseType = {
+type GetUserRaceByIdResponseType = {
   success: boolean;
   message: string;
   data?: {
@@ -76,27 +180,22 @@ type GetRaceResponseType = {
   };
 };
 
-export async function getRaceAction(
+export async function getUserRaceByIdAction(
   id: number,
-  skipAuth: boolean = false,
-): Promise<GetRaceResponseType> {
+): Promise<GetUserRaceByIdResponseType> {
   try {
     // Get the authenticated user
     const user = await getAuthenticatedUser();
 
-    if (!user && !skipAuth) {
+    if (!user) {
       return {
         success: false,
         message: "User not authenticated",
       };
     }
 
-    const whereClause = skipAuth
-      ? eq(races.id, id)
-      : and(eq(races.id, id), eq(races.userId, user?.id || ""));
-
     const race = await db.query.races.findFirst({
-      where: whereClause,
+      where: and(eq(races.id, id), eq(races.userId, user.id)),
       with: {
         address: true,
         options: {
@@ -104,8 +203,6 @@ export async function getRaceAction(
             prices: true,
           },
         },
-        sponsorships: true,
-        website: true,
       },
     });
 
@@ -132,7 +229,7 @@ export async function getRaceAction(
   }
 }
 
-type GetRacesByUserIdResponseType = {
+type GetUserRacesResponseType = {
   success: boolean;
   message: string;
   data?: {
@@ -140,7 +237,7 @@ type GetRacesByUserIdResponseType = {
   };
 };
 
-export async function getRacesByUserAction(): Promise<GetRacesByUserIdResponseType> {
+export async function getUserRacesAction(): Promise<GetUserRacesResponseType> {
   try {
     // Get the authenticated user
     const user = await getAuthenticatedUser();
@@ -162,8 +259,6 @@ export async function getRacesByUserAction(): Promise<GetRacesByUserIdResponseTy
             prices: true,
           },
         },
-        sponsorships: true,
-        website: true,
       },
     });
 
@@ -226,6 +321,8 @@ export async function updateRaceAction(
           date: race.date,
           registrationDeadline: race.registrationDeadline,
           status: race.status,
+          sponsorships: race.sponsorships,
+          website: race.website,
           addressId,
           updatedAt: new Date().toISOString(),
         })
@@ -240,8 +337,6 @@ export async function updateRaceAction(
         with: {
           address: true,
           options: { with: { prices: true } },
-          sponsorships: true,
-          website: true,
         },
       });
     });

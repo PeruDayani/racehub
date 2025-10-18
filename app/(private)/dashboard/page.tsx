@@ -6,21 +6,21 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { getRacesByUserAction } from "@/app/actions/raceActions";
+import { getUserRacesAction } from "@/app/actions/raceActions";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 import PageHeader from "@/app/components/PageHeader.tsx/PageHeader";
-import CreateRace from "@/app/components/Race/CreateRace";
+import CreateRaceButton from "@/app/components/Race/CreateRaceButton";
 import OrganizeRaceCard from "@/app/components/Race/OrganizeRaceCard";
 
 // Tell Next.js that this page depends on cookies
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const races = await getRacesByUserAction();
+  const userRaces = await getUserRacesAction();
 
-  if (!races.success) {
+  if (!userRaces.success) {
     return (
-      <DisplayError errorMessage={races.message} retryUrl={`/dashboard`} />
+      <DisplayError errorMessage={userRaces.message} retryUrl={`/dashboard`} />
     );
   }
 
@@ -35,17 +35,25 @@ export default async function DashboardPage() {
         <Divider />
 
         <Group justify="space-between" align="center">
-          <PageHeader title="(Organizer) Your Races" titleOrder={3} />
-          <CreateRace />
+          <PageHeader title="(Runner) Your Race Tickets" titleOrder={3} />
         </Group>
 
-        {races.data?.races.length === 0 ? (
+        <Text>TODO! - Add race tickets here.</Text>
+
+        <Divider />
+
+        <Group justify="space-between" align="center">
+          <PageHeader title="(Organizer) Your Race Events" titleOrder={3} />
+          <CreateRaceButton />
+        </Group>
+
+        {userRaces.data?.races.length === 0 ? (
           <Text c="dimmed" ta="center" py="xl">
             No races yet. Create your first race to get started!
           </Text>
         ) : (
           <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
-            {races.data?.races.map((race) => (
+            {userRaces.data?.races.map((race) => (
               <OrganizeRaceCard key={race.id} race={race} />
             ))}
           </SimpleGrid>

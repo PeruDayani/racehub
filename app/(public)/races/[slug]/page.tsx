@@ -14,26 +14,29 @@ import {
   Title,
 } from "@mantine/core";
 import { Calendar, Clock, Info, MapPin, Users } from "lucide-react";
-import { getRaceAction } from "@/app/actions/raceActions";
+import { getLiveRaceBySlugAction } from "@/app/actions/raceActions";
 import CheckoutButton from "@/app/components/CheckoutButton/CheckoutButton";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 
 export default async function RacePage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { id } = await params;
+  const { slug } = await params;
 
-  const race = await getRaceAction(parseInt(id, 10), true);
+  const response = await getLiveRaceBySlugAction(slug);
 
-  if (!race.success || !race.data?.race) {
+  if (!response.success || !response.data?.race) {
     return (
-      <DisplayError errorMessage={race.message} retryUrl={`/events/${id}`} />
+      <DisplayError
+        errorMessage={response.message}
+        retryUrl={`/races/${slug}`}
+      />
     );
   }
 
-  const { race: raceData } = race.data;
+  const raceData = response.data?.race;
   const { options } = raceData;
 
   const _formatPrice = (priceCents: number | null) => {

@@ -118,6 +118,7 @@ export default function SideNav() {
 
   const raceName = useRaceStore((state) => state.race.name);
   const raceId = useRaceStore((state) => state.race.id);
+  const raceSlug = useRaceStore((state) => state.race.slug);
   const isSaving = useRaceStore((state) => state.isSaving);
   const saveRace = useRaceStore((state) => state.saveRace);
 
@@ -279,7 +280,7 @@ export default function SideNav() {
                 size="md"
                 radius="md"
                 component={Link}
-                href={`/races/${raceId}`}
+                href={`/races/${raceSlug}`}
                 fullWidth
                 target="_blank"
               >

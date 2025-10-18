@@ -6,11 +6,11 @@ import Link from "next/link";
 
 type CancelPageProps = {
   searchParams: Promise<{
-    raceId: string;
+    raceSlug: string;
   }>;
 };
 export default async function CancelPage({ searchParams }: CancelPageProps) {
-  const { raceId } = await searchParams;
+  const { raceSlug } = await searchParams;
 
   return (
     <Container size={420} my={40}>
@@ -28,10 +28,10 @@ export default async function CancelPage({ searchParams }: CancelPageProps) {
       </Text>
 
       <Group justify="center" gap="md">
-        {raceId && (
+        {raceSlug && (
           <Button
             component={Link}
-            href={`/races/${raceId}`}
+            href={`/races/${raceSlug}`}
             variant="filled"
             size="md"
           >

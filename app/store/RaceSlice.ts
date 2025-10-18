@@ -1,5 +1,8 @@
 import type { StateCreator } from "zustand";
-import { getRaceAction, updateRaceAction } from "../actions/raceActions";
+import {
+  getUserRaceByIdAction,
+  updateRaceAction,
+} from "../actions/raceActions";
 import type { Race } from "../lib/types";
 import type { RaceStore } from "./RaceStore";
 
@@ -32,7 +35,7 @@ export const createRaceSlice =
 
       refreshRootRace: async () => {
         const { id } = get().race;
-        const race = await getRaceAction(id);
+        const race = await getUserRaceByIdAction(id);
         if (race.success && race.data?.race) {
           set({ race: race.data.race });
         }

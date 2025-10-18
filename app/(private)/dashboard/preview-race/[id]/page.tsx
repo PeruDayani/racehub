@@ -14,7 +14,7 @@ import {
   Title,
 } from "@mantine/core";
 import { Calendar, Clock, Info, MapPin, Users } from "lucide-react";
-import { getRaceAction } from "@/app/actions/raceActions";
+import { getUserRaceByIdAction } from "@/app/actions/raceActions";
 import CheckoutButton from "@/app/components/CheckoutButton/CheckoutButton";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 
@@ -27,7 +27,7 @@ export default async function PreviewRacePage({
   params,
 }: PreviewRacePageProps) {
   const { id } = await params;
-  const race = await getRaceAction(parseInt(id, 10));
+  const race = await getUserRaceByIdAction(parseInt(id, 10));
 
   if (!race.success || !race.data?.race) {
     return (

@@ -7,16 +7,21 @@ import {
   type RaceOptionsSlice,
 } from "./RaceOptionsSlice";
 import { createRaceSlice, type RaceSlice } from "./RaceSlice";
+import {
+  createSponsorshipSlice,
+  type SponsorshipSlice,
+} from "./SponsorshipSlice";
 
 enableMapSet();
 
-export type RaceStore = RaceSlice & RaceOptionsSlice;
+export type RaceStore = RaceSlice & RaceOptionsSlice & SponsorshipSlice;
 
 export const createRaceStore = (initialRace: Race) => {
   return createStore<RaceStore>()(
     immer((...args) => ({
       ...createRaceSlice(initialRace)(...args),
       ...createRaceOptionsSlice()(...args),
+      ...createSponsorshipSlice()(...args),
     })),
   );
 };

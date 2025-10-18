@@ -1,24 +1,27 @@
 import { Button, Container, Group, Stack, Text, Title } from "@mantine/core";
 import { Check } from "lucide-react";
 import Link from "next/link";
-import { getRaceAction } from "@/app/actions/raceActions";
+import { getLiveRaceBySlugAction } from "@/app/actions/raceActions";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 
 type SuccessPageProps = {
   searchParams: Promise<{
-    raceId: string;
+    raceSlug: string;
     raceOptionId: string;
   }>;
 };
 
 export default async function SuccessPage({ searchParams }: SuccessPageProps) {
-  const { raceId, raceOptionId } = await searchParams;
+  const { raceSlug, raceOptionId } = await searchParams;
 
-  const race = await getRaceAction(parseInt(raceId, 10));
+  const race = await getLiveRaceBySlugAction(raceSlug);
 
   if (!race.success || !race.data?.race) {
     return (
-      <DisplayError errorMessage={race.message} retryUrl={`/races/${raceId}`} />
+      <DisplayError
+        errorMessage={race.message}
+        retryUrl={`/races/${raceSlug}`}
+      />
     );
   }
 
@@ -30,7 +33,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
     return (
       <DisplayError
         errorMessage="Race option not found"
-        retryUrl={`/races/${raceId}`}
+        retryUrl={`/races/${raceSlug}`}
       />
     );
   }
@@ -57,7 +60,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
         <Group justify="center" gap="md">
           <Button
             component={Link}
-            href={`/races/${raceId}`}
+            href={`/races/${raceSlug}`}
             variant="filled"
             size="md"
           >

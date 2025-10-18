@@ -1,5 +1,5 @@
 import { Flex } from "@mantine/core";
-import { getRaceAction } from "@/app/actions/raceActions";
+import { getUserRaceByIdAction } from "@/app/actions/raceActions";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 import SideNav from "@/app/components/RaceEditor/SideNavigation/SideNav";
 import { RaceStoreProvider } from "@/app/context/RaceStoreContext";
@@ -14,7 +14,7 @@ export default async function EditRaceLsayout({
   children,
 }: EditRaceLayoutProps) {
   const { id } = await params;
-  const race = await getRaceAction(parseInt(id, 10));
+  const race = await getUserRaceByIdAction(parseInt(id, 10));
 
   if (!race.success || !race.data?.race) {
     return (

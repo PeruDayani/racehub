@@ -64,6 +64,20 @@
       "when": 1760475207296,
       "tag": "0008_rich_scarecrow",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1760820923725,
+      "tag": "0009_abandoned_midnight",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1760821567196,
+      "tag": "0010_loud_vance_astro",
+      "breakpoints": true
     }
   ]
 }
