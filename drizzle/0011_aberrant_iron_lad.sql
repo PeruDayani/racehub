@@ -1,0 +1,1 @@
+ALTER TABLE "races" ALTER COLUMN "sponsorships" SET NOT NULL;
