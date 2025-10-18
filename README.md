@@ -89,27 +89,29 @@ TODO:
 
 ### Okay, up next
 
-- Great fucking work.
+One tangent for next time:
+- Setup a shared Media upload/edit/delete component
+- Use that for the user profile, website, sponsors and waiver input.
 
-- STRIPE!!
-- Good progress
-- Save the ticket next
-- Deploy to prod
-- View the ticket in the dashboard
-- Focus in on the ticket workflow.
+Few QoL things:
+- Stripe: Setup 2 sandbox environments - one for prod and one for local
+- Drizzle Migrations - Create a cmd to easily apply migrations to prod - NextJS deployment hook?
+
+And then we continue on:
+- Action to mark Race as "live" with basic validation
+- Save a ticket on successful purchase
+- View the tickets in the dashboard
+- Display QR code for tickets
+
+And once we have tickets:
+- Update the dashboard to show basic stats.
 
 And then after that we have:
 - Make User Auth a top level context
 - Make Sign In / Sign Up modals
 - Sign In -> Sign Up losses the redirect url
-
-- Dashboard stats
-- Racer ticket view
-- QR codes
 - Improving the Race Preview/Public pages
 - Adding more fields to the RaceEditor
-- All Races Search page
-- Upload workflow
 - Emails
 
 - God lord, I'm going to learn a lot
