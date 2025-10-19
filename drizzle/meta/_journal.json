@@ -92,6 +92,13 @@
       "when": 1760828456655,
       "tag": "0012_high_sunspot",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1760910705402,
+      "tag": "0013_strange_alex_power",
+      "breakpoints": true
     }
   ]
 }

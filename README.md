@@ -90,8 +90,12 @@ TODO:
 ### Okay, up next
 
 One tangent for next time:
-- Setup a shared Media upload/edit/delete component
-- Use that for the user profile, website, sponsors and waiver input.
+- Understand and set RLS policies
+- Deploy to Prod
+- Update the Next config to allow supabase image urls
+
+And then for Colin:
+- Writeup
 
 Few QoL things:
 - Stripe: Setup 2 sandbox environments - one for prod and one for local
@@ -99,7 +103,6 @@ Few QoL things:
 - Drizzle Migrations - Create a cmd to easily apply migrations to prod - NextJS deployment hook?
 
 And then we continue on:
-- Action to mark Race as "live" with basic validation
 - Save a ticket on successful purchase
 - View the tickets in the dashboard
 - Display QR code for tickets
@@ -109,11 +112,15 @@ And once we have tickets:
 
 And then after that we have:
 - Make User Auth a top level context
+- Wire up waivers
 - Social links
 - Make Sign In / Sign Up modals
 - Sign In -> Sign Up losses the redirect url
 - Improving the Race Preview/Public pages
 - Adding more fields to the RaceEditor
 - Emails
+
+Don't forget these things:
+- Autosave + Media changes should save?
 
 - Good lord, I'm going to learn a lot

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Avatar,
   Box,
   Button,
   Card,
@@ -14,12 +13,13 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
-import { Camera, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { useState } from "react";
 import { updateProfileAction } from "@/app/actions/profileActions";
 import AddressEditor from "@/app/components/AddressEditor/AddressEditor";
+import MediaUpload from "@/app/components/MediaUpload/MediaUpload";
 import { GENDER_OPTIONS, T_SHIRT_SIZE_OPTIONS } from "@/app/lib/constants";
-import type { AddressInput, UserProfile } from "@/app/lib/types";
+import type { AddressInput, Media, UserProfile } from "@/app/lib/types";
 import PageHeader from "../PageHeader.tsx/PageHeader";
 
 interface ProfileEditorProps {
@@ -28,8 +28,8 @@ interface ProfileEditorProps {
 
 export default function ProfileEditor({ profile }: ProfileEditorProps) {
   const [form, setForm] = useState({
-    profileImageURL: profile.profileImageURL ?? "",
-    dateOfBirth: profile.dateOfBirth ?? "",
+    profileMedia: profile.profileMedia ?? null,
+    dateOfBirth: profile.dateOfBirth ?? null,
     gender: profile.gender ?? "",
     tShirtSize: profile.tShirtSize ?? "",
     phoneNumber: profile.phoneNumber ?? "",
@@ -41,7 +41,7 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
 
   const updateField = (
     field: keyof typeof form,
-    value: string | AddressInput | undefined,
+    value: string | AddressInput | Media | null | undefined,
   ) => setForm((prev) => ({ ...prev, [field]: value }));
 
   const [isSaving, setIsSaving] = useState(false);
@@ -112,34 +112,21 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
           {/* Profile Photo Section */}
           <Card withBorder shadow="sm" radius="md" py="lg">
             <Card.Section inheritPadding py="xs">
-              <Text fw={500}>(WIP) Profile Photo</Text>
+              <Text fw={500}>Profile Photo</Text>
             </Card.Section>
             <Card.Section inheritPadding py="xs">
-              <Group align="center" gap="xl">
-                <Avatar
-                  src={form.profileImageURL || null}
-                  size="lg"
-                  radius="xl"
-                  color="cyan"
-                >
-                  🏃
-                </Avatar>
-                <Stack gap={0}>
-                  <Button
-                    color="cyan"
-                    variant="outline"
-                    leftSection={<Camera size={16} />}
-                    onClick={() =>
-                      document.getElementById("avatar-upload")?.click()
-                    }
-                  >
-                    Upload Photo
-                  </Button>
-                  <Text size="xs" c="dimmed" mt="xs">
-                    JPG, PNG or GIF (max. 2MB)
-                  </Text>
-                </Stack>
-              </Group>
+              <MediaUpload
+                currentMedia={form.profileMedia}
+                onMediaChange={(media) =>
+                  updateField("profileMedia", media || undefined)
+                }
+                bucket="profile"
+                folderId={profile.id}
+                label="Profile Photo"
+                description="Upload a photo for your profile. Recommended size: 200x200px or larger."
+                accept="image/*"
+                maxSize={2}
+              />
             </Card.Section>
           </Card>
 
@@ -158,8 +145,9 @@ export default function ProfileEditor({ profile }: ProfileEditorProps) {
                       valueFormat="YYYY-MM-DD"
                       value={form.dateOfBirth}
                       onChange={(value) =>
-                        updateField("dateOfBirth", value || "")
+                        updateField("dateOfBirth", value || null)
                       }
+                      clearable
                     />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>

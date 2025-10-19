@@ -5,9 +5,9 @@ import { Plus } from "lucide-react";
 import PageHeader from "@/app/components/PageHeader.tsx/PageHeader";
 import { useRaceStore } from "@/app/context/RaceStoreContext";
 import type { Sponsorship } from "@/app/lib/types";
-import SponsorshipCard from "./SponsorshipCard";
+import SponsorshipCard from "./SponsorEditor";
 
-export default function SponsorshipEditor() {
+export default function SponsorshipsEditor() {
   const sponsorships = useRaceStore((state) => state.getSponsorships());
   const addSponsorship = useRaceStore((state) => state.addSponsorship);
 

@@ -1,0 +1,1 @@
+ALTER TABLE "profiles" RENAME COLUMN "profile_image_url" TO "profile_media";

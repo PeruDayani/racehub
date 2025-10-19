@@ -12,12 +12,14 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
+import MediaUpload from "@/app/components/MediaUpload/MediaUpload";
 import { useRaceStore } from "@/app/context/RaceStoreContext";
 import type { Sponsorship } from "@/app/lib/types";
 
-interface SponsorshipCardProps {
+interface SponsorEditorProps {
   sponsorship: Sponsorship;
   index: number;
 }
@@ -28,10 +30,11 @@ const TIER_OPTIONS = [
   { value: "bronze", label: "Bronze" },
 ];
 
-export default function SponsorshipCard({
+export default function SponsorEditor({
   sponsorship,
   index,
-}: SponsorshipCardProps) {
+}: SponsorEditorProps) {
+  const raceId = useRaceStore((state) => state.race.id);
   const [collapsed, setCollapsed] = useState<boolean>(sponsorship.name !== "");
 
   const updateSponsorship = useRaceStore((state) => state.updateSponsorship);
@@ -39,6 +42,25 @@ export default function SponsorshipCard({
 
   const onUpdate = (field: keyof Sponsorship, value: any) => {
     updateSponsorship(sponsorship.id, { [field]: value });
+  };
+
+  const onWebsiteUrlBlur = (value: string) => {
+    if (value && typeof value === "string") {
+      const sanitizedUrl = getValidUrl(value);
+      updateSponsorship(sponsorship.id, { websiteUrl: sanitizedUrl });
+    }
+  };
+
+  const getValidUrl = (url: string) => {
+    if (!url) return "";
+
+    // If it already has a protocol, return as is
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+
+    // If it starts with www. or doesn't have a protocol, add https://
+    return `https://${url}`;
   };
 
   const getSummary = () => {
@@ -113,6 +135,40 @@ export default function SponsorshipCard({
             value={sponsorship.description || ""}
             onChange={(e) => onUpdate("description", e.target.value)}
             minRows={3}
+          />
+
+          <TextInput
+            label="Website URL"
+            placeholder="example.com or https://example.com"
+            value={sponsorship.websiteUrl || ""}
+            onChange={(e) => onUpdate("websiteUrl", e.target.value)}
+            onBlur={(e) => onWebsiteUrlBlur(e.target.value)}
+            rightSection={
+              sponsorship.websiteUrl ? (
+                <ActionIcon
+                  variant="subtle"
+                  size="sm"
+                  component={Link}
+                  href={sponsorship.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open website"
+                >
+                  <ExternalLink size={16} />
+                </ActionIcon>
+              ) : null
+            }
+          />
+
+          <MediaUpload
+            currentMedia={sponsorship.logo}
+            onMediaChange={(media) => onUpdate("logo", media)}
+            bucket="website"
+            folderId={raceId.toString()}
+            label="Sponsor Logo"
+            description="Upload a logo for this sponsor. Recommended size: 200x200px or larger."
+            accept="image/*"
+            maxSize={5}
           />
         </Stack>
       </Collapse>

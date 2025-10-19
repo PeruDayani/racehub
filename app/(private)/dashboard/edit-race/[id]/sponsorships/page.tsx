@@ -1,5 +1,5 @@
-import SponsorshipEditor from "@/app/components/RaceEditor/Sponsorships/SponsorshipEditor";
+import SponsorshipsEditor from "@/app/components/RaceEditor/Sponsorships/SponsorshipsEditor";
 
 export default async function Sponsorships() {
-  return <SponsorshipEditor />;
+  return <SponsorshipsEditor />;
 }

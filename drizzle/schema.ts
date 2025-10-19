@@ -14,7 +14,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
 import { DEFAULT_WEBSITE } from "@/app/lib/constants";
-import type { RaceStatus, Sponsorship, Website } from "@/app/lib/types";
+import type { Media, RaceStatus, Sponsorship, Website } from "@/app/lib/types";
 
 // =============================
 // Tables
@@ -25,7 +25,7 @@ export const profiles = pgTable("profiles", {
   id: uuid("id")
     .primaryKey()
     .references(() => authUsers.id, { onDelete: "no action" }),
-  profileImageURL: text("profile_image_url"),
+  profileMedia: jsonb("profile_media").$type<Media>(),
   addressId: integer("address_id").references(() => addresses.id),
   dateOfBirth: date("date_of_birth"),
   gender: text("gender"),
