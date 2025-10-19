@@ -95,6 +95,7 @@ One tangent for next time:
 
 Few QoL things:
 - Stripe: Setup 2 sandbox environments - one for prod and one for local
+- Stripe: Update the workflow to use the race slug maybe? or stick with race Id?
 - Drizzle Migrations - Create a cmd to easily apply migrations to prod - NextJS deployment hook?
 
 And then we continue on:
@@ -108,10 +109,11 @@ And once we have tickets:
 
 And then after that we have:
 - Make User Auth a top level context
+- Social links
 - Make Sign In / Sign Up modals
 - Sign In -> Sign Up losses the redirect url
 - Improving the Race Preview/Public pages
 - Adding more fields to the RaceEditor
 - Emails
 
-- God lord, I'm going to learn a lot
+- Good lord, I'm going to learn a lot

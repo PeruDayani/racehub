@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import type { StateCreator } from "zustand";
 import { DEFAULT_WEBSITE } from "../lib/constants";
-import type { Website } from "../lib/types";
+import type { Media, Website } from "../lib/types";
 import type { RaceStore } from "./RaceStore";
 
 export type WebsiteSliceActions = {
@@ -10,6 +10,8 @@ export type WebsiteSliceActions = {
   addWebsiteSection: () => void;
   updateWebsiteSection: (index: number, name: string, content: string) => void;
   removeWebsiteSection: (index: number) => void;
+  updateWebsiteLogo: (logo: Media | null) => void;
+  updateWebsiteBanner: (banner: Media | null) => void;
   resetWebsite: () => void;
 };
 
@@ -53,6 +55,18 @@ export const createWebsiteSlice =
           if (state.race.website) {
             state.race.website.sections.splice(index, 1);
           }
+        });
+      },
+
+      updateWebsiteLogo: (logo: Media | null) => {
+        set((state) => {
+          state.race.website.logo = logo || undefined;
+        });
+      },
+
+      updateWebsiteBanner: (banner: Media | null) => {
+        set((state) => {
+          state.race.website.banner = banner || undefined;
         });
       },
 

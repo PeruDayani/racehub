@@ -54,9 +54,9 @@ export type RaceStatus = "draft" | "live" | "finished";
 
 export type Website = {
   description: string;
-  logoUrl?: string;
-  bannerUrl?: string;
   sections: WebsiteSection[];
+  logo?: Media;
+  banner?: Media;
 };
 
 export type WebsiteSection = {
@@ -69,7 +69,14 @@ export type Sponsorship = {
   id: string;
   name: string;
   description: string;
-  logoUrl?: string;
+  logo?: Media;
   websiteUrl?: string;
   tier: "gold" | "silver" | "bronze";
 };
+
+export type Media = {
+  url: string;
+  path: string;
+};
+
+export type MediaBucket = "profile" | "website" | "waivers";

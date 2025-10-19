@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import PageHeader from "@/app/components/PageHeader.tsx/PageHeader";
 import { useRaceStore } from "@/app/context/RaceStoreContext";
 import type { WebsiteSection } from "@/app/lib/types";
+import WebsiteMediaEditor from "./WebsiteMediaEditor";
 import WebsiteSectionEditor from "./WebsiteSectionEditor";
 
 export default function WebsiteEditor() {
@@ -55,6 +56,9 @@ export default function WebsiteEditor() {
               maxRows={8}
             />
           </Box>
+
+          {/* Media Section */}
+          <WebsiteMediaEditor />
 
           {/* Sections */}
           <Box>

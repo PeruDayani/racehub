@@ -49,4 +49,6 @@ export const GENDER_CATEGORIES = [
 export const DEFAULT_WEBSITE: Website = {
   description: "",
   sections: [],
+  logo: undefined,
+  banner: undefined,
 };
