@@ -43,7 +43,7 @@ export const createRaceOptionsSlice =
             cutoffTime: null,
             courseMapUrl: null,
             isVirtual: false,
-            isFree: true,
+            isFree: false,
             description: null,
             ageMin: null,
             ageMax: null,
