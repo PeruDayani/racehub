@@ -1,4 +1,55 @@
-Take 2!
+All the documentation can be found in [this Notion page](
+https://www.notion.so/perudayani/Tech-Setup-28f6a6748589802e8cd2f174f34e9d8d?source=copy_link)
+
+What follows is a messy dialogue of what goes on in Peru's head as he is coding.
+
+### WOW, there's a lot to do
+
+### Mobile App
+
+> Please start on the Mobile App soon  - Peru, Oct 16th
+
+> Can the website goal for v1 be a 10 friend event? Then my brain won't worry about every feature on the website - Peru, Oct 17th
+
+#### Small things that will go a long way
+
+- Stripe: Setup 2 sandbox environments - one for prod and one for local
+- Drizzle Migrations - Create a cmd to easily apply migrations to prod
+- Button to create mock Race
+- Wire up UserContext
+
+#### A defintely doable albeit long list of everything else
+
+Ticket table
+- Update stripe to use race slug instead of race id?
+- Save a ticket on successful stripe purchase
+- Users can view their tickets in their dashboard
+- Display QR code for tickets
+- Display ticket information and status on ticket/[id] page
+
+Once we have tickets:
+- Update the dashboard to show basic stats.
+- Add social links to website - this could be a good one for Colin?
+
+And then we improve the Stripe worklow
+- Ability to buy multiple tickets
+- An input form for Waivers / Basic Info
+- Add support for taxes - https://stripe.com/tax
+- Add support for discount codes???
+
+And then the Race Management Page.
+- Oof, there's a lot
+
+Bugs:
+- Sign In -> Sign Up losses the redirect url
+
+### Take 3: Future Improvements:
+- Seperate npm command for Prod Migration?
+- Prod Migrations on deploy via Vercel hook?
+- Autosave + Media changes should save?
+- Define Supabase Buckets using migrations
+- Define Supabase RLS using Drizzle: https://orm.drizzle.team/docs/rls#using-with-supabase
+
 
 ### Supabase
 
@@ -35,6 +86,7 @@ Schema & Migrations
 - Update the schema in db/schema.
 - Generate a migration using `npx drizzle-kit generate`
 - Apply the migration using `npx drizzle-kit migrate`
+- Created `npm run migrate` to do both of these.
 
 ### Supabase User Auth
 
@@ -55,18 +107,18 @@ Overview
 ### Prod Migrations
 - Switch the DATABASE_URL in .env
 - Run `npm run migrate`
-- Can I wire this up to a Vercel action somehow?
+- This is bad and I will clean up the workflow
 
 ### Stripe!!
 - There's so much happening here, and so much more to do
 - Everything starts in the Stripe dashboard: https://dashboard.stripe.com/acct_1SCM6MJHWd8FMlJA/test/payments
-- The STRIPE_SECRET_KEY and NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY define which stripe project/env we are connected to. Both local and prod are currently pointing to the Sandbox env.
+- The STRIPE_SECRET_KEY and NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY define which stripe project/env we are connected to. 
+- Both local and prod are currently pointing to the Sandbox env.
 
 - Once we are connected to a Stripe account, the magic starts from the CheckoutButton.tsx
 - We require Auth to buy a ticket.
 - We call the /api/stripe/checkout endpoint which gives us a URL for the stripe connect page
 - This API endpoint passes in a PriceObject to the stripe checkout session. The Metadata passed in gets passed through the webhook to our api endpoint.
-- TODO: How can we add Taxes, Discounts, Multiple Tickets, etc???
 - We redirect the users to this page
 - This page handles checkout
 - On successfully checkout, a Webhook (configured on the Stripe Dashboard) is triggered
@@ -78,49 +130,6 @@ Overview
 - For local testing
 - In a new Iterm run `stripe listen --forward-to localhost:3000/api/stripe/webhook`
 - This will give you a STRIPE_WEBHOOK_SECRET for local testing
-- TODO: How can I have one sandbox webhook for prod and another one for local??
 - Disabling the webhook seemed to have worked. But that'll be a headache.
 - Having both the webhook and local listener results in both getting called, which will mess up the prod DB during local dev.
 - Probably two sandboxes is the way to go. Dev and Stg.
-
-TODO:
-- How to define RLS for Supabase?
-- https://orm.drizzle.team/docs/rls#using-with-supabase
-
-### Okay, up next
-
-One tangent for next time:
-- Understand and set RLS policies
-- Deploy to Prod
-- Update the Next config to allow supabase image urls
-
-And then for Colin:
-- Writeup
-
-Few QoL things:
-- Stripe: Setup 2 sandbox environments - one for prod and one for local
-- Stripe: Update the workflow to use the race slug maybe? or stick with race Id?
-- Drizzle Migrations - Create a cmd to easily apply migrations to prod - NextJS deployment hook?
-
-And then we continue on:
-- Save a ticket on successful purchase
-- View the tickets in the dashboard
-- Display QR code for tickets
-
-And once we have tickets:
-- Update the dashboard to show basic stats.
-
-And then after that we have:
-- Make User Auth a top level context
-- Wire up waivers
-- Social links
-- Make Sign In / Sign Up modals
-- Sign In -> Sign Up losses the redirect url
-- Improving the Race Preview/Public pages
-- Adding more fields to the RaceEditor
-- Emails
-
-Don't forget these things:
-- Autosave + Media changes should save?
-
-- Good lord, I'm going to learn a lot
