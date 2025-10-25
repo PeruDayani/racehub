@@ -99,6 +99,13 @@
       "when": 1760910705402,
       "tag": "0013_strange_alex_power",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1761413343927,
+      "tag": "0014_sudden_the_renegades",
+      "breakpoints": true
     }
   ]
 }
