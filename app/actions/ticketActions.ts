@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { tickets } from "../../drizzle/schema";
 import { db } from "../lib/db";
@@ -15,7 +15,7 @@ type CreateTicketResponseType = {
   success: boolean;
   message: string;
   data?: {
-    ticketId: number;
+    ticketId: string;
   };
 };
 
@@ -142,7 +142,7 @@ export async function getUserTicketsAction(): Promise<GetUserTicketsResponseType
         raceOption: true,
         raceOptionPrice: true,
       },
-      orderBy: (tickets, { desc }) => [desc(tickets.createdAt)],
+      orderBy: [desc(tickets.createdAt)],
     });
 
     return {
@@ -175,7 +175,7 @@ type GetTicketByIdResponseType = {
 };
 
 export async function getTicketByIdAction(
-  ticketId: number,
+  ticketId: string,
 ): Promise<GetTicketByIdResponseType> {
   try {
     // Get the authenticated user
@@ -219,8 +219,7 @@ export async function getTicketByIdAction(
     console.error("Error getting ticket by ID:", error);
     return {
       success: false,
-      message:
-        error instanceof Error ? error.message : "Failed to get ticket",
+      message: error instanceof Error ? error.message : "Failed to get ticket",
     };
   }
 }

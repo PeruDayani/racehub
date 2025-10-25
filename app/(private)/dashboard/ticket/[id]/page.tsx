@@ -1,5 +1,5 @@
-import { getTicketByIdAction } from "@/app/actions/ticketActions";
 import { Container } from "@mantine/core";
+import { getTicketByIdAction } from "@/app/actions/ticketActions";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 import ViewTicket from "@/app/components/Ticket/ViewTicket";
 
@@ -10,10 +10,9 @@ interface TicketPageProps {
 }
 
 export default async function TicketPage({ params }: TicketPageProps) {
-  const { id } = await params;  
-  const ticketId = parseInt(id);
-  
-  if (isNaN(ticketId)) {
+  const { id } = await params;
+
+  if (!id) {
     return (
       <DisplayError
         title="Invalid Ticket ID"
@@ -25,8 +24,8 @@ export default async function TicketPage({ params }: TicketPageProps) {
     );
   }
 
-  const result = await getTicketByIdAction(ticketId);
-  
+  const result = await getTicketByIdAction(id);
+
   if (!result.success || !result.data) {
     return (
       <DisplayError
