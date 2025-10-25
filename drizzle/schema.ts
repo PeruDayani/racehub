@@ -111,6 +111,38 @@ export const addresses = pgTable("addresses", {
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
 
+export const tickets = pgTable("tickets", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => authUsers.id, { onDelete: "no action" }),
+  raceId: integer("race_id")
+    .notNull()
+    .references(() => races.id, { onDelete: "no action" }),
+  raceOptionId: integer("race_option_id")
+    .notNull()
+    .references(() => raceOptions.id, { onDelete: "no action" }),
+  raceOptionPriceId: integer("race_option_price_id")
+    .notNull()
+    .references(() => raceOptionPrices.id, { onDelete: "no action" }),
+
+  // Stripe Payment References
+  stripeSessionId: text("stripe_session_id").notNull().unique(),
+  stripePaymentIntentId: text("stripe_payment_intent_id").notNull(),
+  stripePaymentIntentStatus: text("stripe_payment_intent_status").notNull(),
+
+  // Payment Details
+  amountPaidCents: integer("amount_paid_cents").notNull(),
+  currency: text("currency").notNull(),
+  discountAmountCents: integer("discount_amount_cents"),
+  taxAmountCents: integer("tax_amount_cents"),
+  finalAmountCents: integer("final_amount_cents").notNull(),
+  metadata: jsonb("metadata"),
+
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
+});
+
 // =============================
 // Relations
 // =============================
@@ -123,12 +155,17 @@ export const profilesRelations = relations(profiles, ({ one }) => ({
 }));
 
 export const racesRelations = relations(races, ({ one, many }) => ({
+  user: one(authUsers, {
+    fields: [races.userId],
+    references: [authUsers.id],
+  }),
   address: one(addresses, {
     fields: [races.addressId],
     references: [addresses.id],
   }),
   options: many(raceOptions),
   optionPrices: many(raceOptionPrices),
+  tickets: many(tickets),
 }));
 
 export const raceOptionsRelations = relations(raceOptions, ({ one, many }) => ({
@@ -137,11 +174,12 @@ export const raceOptionsRelations = relations(raceOptions, ({ one, many }) => ({
     references: [races.id],
   }),
   prices: many(raceOptionPrices),
+  tickets: many(tickets),
 }));
 
 export const raceOptionPricesRelations = relations(
   raceOptionPrices,
-  ({ one }) => ({
+  ({ one, many }) => ({
     race: one(races, {
       fields: [raceOptionPrices.raceId],
       references: [races.id],
@@ -150,5 +188,25 @@ export const raceOptionPricesRelations = relations(
       fields: [raceOptionPrices.raceOptionId],
       references: [raceOptions.id],
     }),
+    tickets: many(tickets),
   }),
 );
+
+export const ticketsRelations = relations(tickets, ({ one }) => ({
+  user: one(authUsers, {
+    fields: [tickets.userId],
+    references: [authUsers.id],
+  }),
+  race: one(races, {
+    fields: [tickets.raceId],
+    references: [races.id],
+  }),
+  raceOption: one(raceOptions, {
+    fields: [tickets.raceOptionId],
+    references: [raceOptions.id],
+  }),
+  raceOptionPrice: one(raceOptionPrices, {
+    fields: [tickets.raceOptionPriceId],
+    references: [raceOptionPrices.id],
+  }),
+}));
