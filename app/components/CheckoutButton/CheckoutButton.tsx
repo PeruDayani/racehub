@@ -9,6 +9,7 @@ import type { RaceOption, RaceOptionPrice } from "@/app/lib/types";
 type CheckoutButtonProps = {
   raceId: number;
   raceName: string;
+  raceSlug: string;
   raceOption: RaceOption;
   raceOptionPrice: RaceOptionPrice;
 };
@@ -16,6 +17,7 @@ type CheckoutButtonProps = {
 export default function CheckoutButton({
   raceId,
   raceName,
+  raceSlug,
   raceOption,
   raceOptionPrice,
 }: CheckoutButtonProps) {
@@ -62,6 +64,7 @@ export default function CheckoutButton({
         body: JSON.stringify({
           raceId,
           raceName,
+          raceSlug,
           raceOption,
           raceOptionPrice,
         }),

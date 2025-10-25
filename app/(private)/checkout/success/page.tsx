@@ -1,20 +1,23 @@
 import { Button, Container, Group, Stack, Text, Title } from "@mantine/core";
 import { Check } from "lucide-react";
 import Link from "next/link";
-import { getLiveRaceBySlugAction } from "@/app/actions/raceActions";
+import { getLiveRaceByIdAction } from "@/app/actions/raceActions";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 
 type SuccessPageProps = {
   searchParams: Promise<{
+    raceId: string;
     raceSlug: string;
     raceOptionId: string;
+    raceOptionPriceId: string;
   }>;
 };
 
 export default async function SuccessPage({ searchParams }: SuccessPageProps) {
-  const { raceSlug, raceOptionId } = await searchParams;
+  const { raceId, raceSlug, raceOptionId, raceOptionPriceId } =
+    await searchParams;
 
-  const race = await getLiveRaceBySlugAction(raceSlug);
+  const race = await getLiveRaceByIdAction(parseInt(raceId, 10));
 
   if (!race.success || !race.data?.race) {
     return (
@@ -33,6 +36,18 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
     return (
       <DisplayError
         errorMessage="Race option not found"
+        retryUrl={`/races/${raceSlug}`}
+      />
+    );
+  }
+
+  const raceOptionPrice = raceOption.prices.find(
+    (price) => price.id === parseInt(raceOptionPriceId, 10),
+  );
+  if (!raceOptionPrice) {
+    return (
+      <DisplayError
+        errorMessage="Race option price not found"
         retryUrl={`/races/${raceSlug}`}
       />
     );

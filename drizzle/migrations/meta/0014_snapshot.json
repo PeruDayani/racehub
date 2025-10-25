@@ -165,12 +165,8 @@
           "tableFrom": "profiles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -178,12 +174,8 @@
           "name": "profiles_address_id_addresses_id_fk",
           "tableFrom": "profiles",
           "tableTo": "addresses",
-          "columnsFrom": [
-            "address_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["address_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -261,12 +253,8 @@
           "name": "race_option_prices_race_id_races_id_fk",
           "tableFrom": "race_option_prices",
           "tableTo": "races",
-          "columnsFrom": [
-            "race_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["race_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -274,12 +262,8 @@
           "name": "race_option_prices_race_option_id_race_options_id_fk",
           "tableFrom": "race_option_prices",
           "tableTo": "race_options",
-          "columnsFrom": [
-            "race_option_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["race_option_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -402,12 +386,8 @@
           "name": "race_options_race_id_races_id_fk",
           "tableFrom": "race_options",
           "tableTo": "races",
-          "columnsFrom": [
-            "race_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["race_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -507,12 +487,8 @@
           "tableFrom": "races",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -520,12 +496,8 @@
           "name": "races_addressId_addresses_id_fk",
           "tableFrom": "races",
           "tableTo": "addresses",
-          "columnsFrom": [
-            "addressId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["addressId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -535,9 +507,7 @@
         "races_slug_unique": {
           "name": "races_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -655,12 +625,8 @@
           "tableFrom": "tickets",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -668,12 +634,8 @@
           "name": "tickets_race_id_races_id_fk",
           "tableFrom": "tickets",
           "tableTo": "races",
-          "columnsFrom": [
-            "race_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["race_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -681,12 +643,8 @@
           "name": "tickets_race_option_id_race_options_id_fk",
           "tableFrom": "tickets",
           "tableTo": "race_options",
-          "columnsFrom": [
-            "race_option_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["race_option_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -694,12 +652,8 @@
           "name": "tickets_race_option_price_id_race_option_prices_id_fk",
           "tableFrom": "tickets",
           "tableTo": "race_option_prices",
-          "columnsFrom": [
-            "race_option_price_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["race_option_price_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -709,9 +663,7 @@
         "tickets_stripe_session_id_unique": {
           "name": "tickets_stripe_session_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "stripe_session_id"
-          ]
+          "columns": ["stripe_session_id"]
         }
       },
       "policies": {},

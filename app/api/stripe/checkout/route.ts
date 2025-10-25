@@ -1,24 +1,34 @@
 import { NextResponse } from "next/server";
+import { getAuthenticatedUser } from "@/app/actions/utils";
 import { stripe } from "@/app/lib/stripe";
 import type { RaceOption, RaceOptionPrice } from "@/app/lib/types";
 
 type CheckoutRequest = {
   raceId: number;
   raceName: string;
+  raceSlug: string;
   raceOption: RaceOption;
   raceOptionPrice: RaceOptionPrice;
 };
 
 export async function POST(req: Request) {
   try {
-    const { raceId, raceName, raceOption, raceOptionPrice } =
+    const { raceId, raceName, raceSlug, raceOption, raceOptionPrice } =
       (await req.json()) as CheckoutRequest;
 
-    if (!raceId || !raceName || !raceOption || !raceOptionPrice) {
+    if (!raceId || !raceName || !raceSlug || !raceOption || !raceOptionPrice) {
       return NextResponse.json(
-        { error: "Missing raceId, raceName, raceOption, or raceOptionPrice" },
+        {
+          error:
+            "Missing raceId, raceName, raceSlug, raceOption, or raceOptionPrice",
+        },
         { status: 400 },
       );
+    }
+
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 401 });
     }
 
     // Create a one-time Checkout Session with dynamic price_data
@@ -38,10 +48,12 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?raceId=${raceId}&raceOptionId=${raceOption.id}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/races/${raceId}`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success?raceId=${raceId}&raceSlug=${raceSlug}&raceOptionId=${raceOption.id}&raceOptionPriceId=${raceOptionPrice.id}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/races/${raceSlug}`,
       metadata: {
+        userId: user.id,
         raceId,
+        raceSlug,
         raceOptionId: raceOption.id,
         raceOptionPriceId: raceOptionPrice.id,
       },

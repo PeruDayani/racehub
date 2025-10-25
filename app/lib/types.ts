@@ -5,6 +5,7 @@ import type {
   raceOptionPrices,
   raceOptions,
   races,
+  tickets,
 } from "../../drizzle/schema";
 
 // Re-export Supabase User type for convenience
@@ -31,6 +32,7 @@ export type Address_DB = typeof addresses.$inferSelect;
 export type Race_DB = typeof races.$inferSelect;
 export type RaceOption_DB = typeof raceOptions.$inferSelect;
 export type RaceOptionPrice_DB = typeof raceOptionPrices.$inferSelect;
+export type Ticket_DB = typeof tickets.$inferSelect;
 
 export type UserProfile = Profile_DB & {
   address?: Address_DB | null;
@@ -80,3 +82,11 @@ export type Media = {
 };
 
 export type MediaBucket = "profile" | "website" | "waivers";
+
+export type Ticket = Ticket_DB & {
+  race: Race_DB & {
+    address?: Address_DB | null;
+  };
+  raceOption: RaceOption_DB;
+  raceOptionPrice: RaceOptionPrice;
+};
