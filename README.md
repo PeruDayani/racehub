@@ -17,6 +17,7 @@ What follows is a messy dialogue of what goes on in Peru's head as he is coding.
 #### Small things that will go a long way
 
 - Drizzle Migrations - Create a cmd to easily apply migrations to prod
+- Drizzle Migrations - how to merge changes across Colin/Peru codebases?
 - Button to create mock Race
 - Wire up UserContext
 

@@ -5,5 +5,4 @@
 - Tickets table wired up
 - View tickets in dashboard
 - View tickets in standalone page
-
 - Tickets QR code

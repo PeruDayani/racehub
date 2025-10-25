@@ -13,6 +13,9 @@ import PageHeader from "@/app/components/PageHeader.tsx/PageHeader";
 import CreateRaceButton from "@/app/components/Race/CreateRaceButton";
 import OrganizeRaceCard from "@/app/components/Race/OrganizeRaceCard";
 import TicketCard from "@/app/components/Ticket/TicketCard";
+import { Button } from "@mantine/core";
+import Link from "next/link";
+import { Search } from "lucide-react";
 
 // Tell Next.js that this page depends on cookies
 export const dynamic = "force-dynamic";
@@ -48,6 +51,7 @@ export default async function DashboardPage() {
 
         <Group justify="space-between" align="center">
           <PageHeader title="(Runner) Your Race Tickets" titleOrder={3} />
+          <Button component={Link} href="/races" leftSection={<Search size={18} />}> Find a Race </Button>
         </Group>
 
         {userTickets.data?.tickets.length === 0 ? (
