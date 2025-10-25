@@ -42,6 +42,7 @@ export async function getLiveRaceBySlugAction(
         },
       },
     });
+    console.log("Debug Race:", race);
 
     if (!race) {
       return {
@@ -322,6 +323,7 @@ export async function updateRaceAction(
           registrationDeadline: race.registrationDeadline,
           sponsorships: race.sponsorships,
           website: race.website,
+          socialMedia: race.socialMedia,
           addressId,
           updatedAt: new Date().toISOString(),
         })

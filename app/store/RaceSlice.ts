@@ -18,6 +18,7 @@ export type RaceSliceActions = {
 
   getRace: () => Race;
   updateRaceField: (field: keyof Race, value: any) => void;
+  updateSocialMedia: (socialMedia: any) => void;
   saveRace: () => Promise<{ success: boolean; message: string }>;
   markRaceAsLive: () => Promise<{ success: boolean; message: string }>;
 
@@ -53,6 +54,10 @@ export const createRaceSlice =
 
       updateRaceField: (field: keyof Race, value: any) => {
         set({ race: { ...get().race, [field]: value } });
+      },
+
+      updateSocialMedia: (socialMedia: any) => {
+        set({ race: { ...get().race, socialMedia } });
       },
 
       saveRace: async () => {

@@ -80,3 +80,11 @@ export type Media = {
 };
 
 export type MediaBucket = "profile" | "website" | "waivers";
+
+export type SocialMedia = {
+  facebook?: string;
+  instagram?: string;
+  twitter?: string;
+  linkedin?: string;
+  website?: string;
+};

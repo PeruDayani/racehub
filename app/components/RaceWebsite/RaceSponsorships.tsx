@@ -17,8 +17,28 @@ interface RaceSponsorshipsProps {
 }
 
 export default function RaceSponsorships({ race }: RaceSponsorshipsProps) {
+  // Debug: Log sponsorships data
+  console.log('RaceSponsorships - race.sponsorships:', race.sponsorships);
+  console.log('RaceSponsorships - sponsorships length:', race.sponsorships?.length);
+  
   if (!race.sponsorships || race.sponsorships.length === 0) {
-    return null;
+    console.log('RaceSponsorships - No sponsorships found, returning null');
+    // Temporary: Show a message when no sponsorships
+    return (
+      <Box mt="xl">
+        <Box 
+          style={{ 
+            borderTop: '1px solid #e9ecef',
+            marginTop: '2rem',
+            marginBottom: '2rem'
+          }}
+        />
+        <Title order={2} size="h2" mb="md" ta="center">
+          Our Partners
+        </Title>
+        <Text c="dimmed" ta="center">No partners have been added yet.</Text>
+      </Box>
+    );
   }
 
   const getTierLabel = (tier: string) => {
@@ -36,8 +56,15 @@ export default function RaceSponsorships({ race }: RaceSponsorshipsProps) {
 
   return (
     <Box mt="xl">
-      <Title order={2} size="h2" mb="md">
-        Our Sponsors
+      <Box 
+        style={{ 
+          borderTop: '1px solid #e9ecef',
+          marginTop: '2rem',
+          marginBottom: '2rem'
+        }}
+      />
+      <Title order={2} size="h2" mb="md" ta="center">
+        Our Partners
       </Title>
       <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="md">
         {race.sponsorships.map((sponsorship) => (

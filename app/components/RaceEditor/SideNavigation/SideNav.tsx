@@ -27,6 +27,7 @@ import {
   type LucideIcon,
   Mail,
   Save,
+  Share2,
   Ticket,
   Users,
 } from "lucide-react";
@@ -73,6 +74,12 @@ const NAV_LINKS: NavLinkItem[] = [
     value: "website",
     description: "Customize race website",
     icon: Globe,
+  },
+  {
+    label: "Social Media",
+    value: "social",
+    description: "Manage social media links",
+    icon: Share2,
   },
   {
     label: "Payment Configuration",

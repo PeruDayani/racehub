@@ -1,0 +1,1 @@
+ALTER TABLE "races" ADD COLUMN "social_media" jsonb DEFAULT '{}'::jsonb;

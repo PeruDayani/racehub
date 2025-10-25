@@ -12,9 +12,6 @@ export default function RaceSections({ race }: RaceSectionsProps) {
 
   return (
     <Box mt="xl">
-      <Title order={2} size="h2" mb="md">
-        About the Race
-      </Title>
       <Stack gap="lg">
         {race.website.sections.map((section, index) => (
           <Box key={section.id || index}>
