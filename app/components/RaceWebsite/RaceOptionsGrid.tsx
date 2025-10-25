@@ -108,6 +108,7 @@ export default function RaceOptionsGrid({ race }: RaceOptionsGridProps) {
                         key={price.id}
                         raceId={race.id}
                         raceName={race.name}
+                        raceSlug={race.slug}
                         raceOption={option}
                         raceOptionPrice={price}
                       />

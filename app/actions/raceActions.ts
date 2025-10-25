@@ -17,6 +17,54 @@ import { getAuthenticatedUser } from "./utils";
  * Live races actions that do not require authentication
  */
 
+type GetLiveRaceByIdResponseType = {
+  success: boolean;
+  message: string;
+  data?: {
+    race: Race;
+  };
+};
+
+export async function getLiveRaceByIdAction(
+  id: number,
+): Promise<GetLiveRaceByIdResponseType> {
+  try {
+    const race = await db.query.races.findFirst({
+      where: and(eq(races.id, id), eq(races.status, "live")),
+      with: {
+        address: true,
+        options: {
+          with: {
+            prices: true,
+          },
+        },
+      },
+    });
+
+    if (!race) {
+      return {
+        success: false,
+        message: "Race not found",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Race found",
+      data: {
+        race,
+      },
+    };
+  } catch (error) {
+    console.error("Error getting live race by id:", error);
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to get public race",
+    };
+  }
+}
+
 type GetLiveRaceBySlugResponseType = {
   success: boolean;
   message: string;
@@ -28,8 +76,6 @@ type GetLiveRaceBySlugResponseType = {
 export async function getLiveRaceBySlugAction(
   slug: string,
 ): Promise<GetLiveRaceBySlugResponseType> {
-  console.log("getLiveRaceBySlugAction", slug);
-
   try {
     const race = await db.query.races.findFirst({
       where: and(eq(races.slug, slug), eq(races.status, "live")),
@@ -58,7 +104,7 @@ export async function getLiveRaceBySlugAction(
       },
     };
   } catch (error) {
-    console.error("Error getting public race:", error);
+    console.error("Error getting live race by slug:", error);
     return {
       success: false,
       message:

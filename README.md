@@ -7,25 +7,20 @@ What follows is a messy dialogue of what goes on in Peru's head as he is coding.
 
 ### Mobile App
 
+> We're starting on the Mobile App next :) - Peru, Oct 25th
+
 > Please start on the Mobile App soon  - Peru, Oct 16th
 
 > Can the website goal for v1 be a 10 friend event? Then my brain won't worry about every feature on the website - Peru, Oct 17th
 
+
 #### Small things that will go a long way
 
-- Stripe: Setup 2 sandbox environments - one for prod and one for local
 - Drizzle Migrations - Create a cmd to easily apply migrations to prod
 - Button to create mock Race
 - Wire up UserContext
 
 #### A defintely doable albeit long list of everything else
-
-Ticket table
-- Update stripe to use race slug instead of race id?
-- Save a ticket on successful stripe purchase
-- Users can view their tickets in their dashboard
-- Display QR code for tickets
-- Display ticket information and status on ticket/[id] page
 
 Once we have tickets:
 - Update the dashboard to show basic stats.
@@ -44,12 +39,12 @@ Bugs:
 - Sign In -> Sign Up losses the redirect url
 
 ### Take 3: Future Improvements:
+- Clean up the Type definitions a bit more, might be worth manually defining the types
 - Seperate npm command for Prod Migration?
 - Prod Migrations on deploy via Vercel hook?
 - Autosave + Media changes should save?
 - Define Supabase Buckets using migrations
 - Define Supabase RLS using Drizzle: https://orm.drizzle.team/docs/rls#using-with-supabase
-
 
 ### Supabase
 
