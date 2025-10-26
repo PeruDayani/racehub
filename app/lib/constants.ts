@@ -1,4 +1,4 @@
-import type { Website } from "./types";
+import type { SocialMedia, Website } from "./types";
 
 export const PUBLIC_ROUTES = [
   "/auth",
@@ -52,3 +52,34 @@ export const DEFAULT_WEBSITE: Website = {
   logo: undefined,
   banner: undefined,
 };
+
+export const DEFAULT_SOCIAL_MEDIA: SocialMedia = [
+  {
+    platform: "facebook",
+    url: "",
+  },
+  {
+    platform: "instagram",
+    url: "",
+  },
+  {
+    platform: "youtube",
+    url: "",
+  },
+  {
+    platform: "tiktok",
+    url: "",
+  },
+  {
+    platform: "x",
+    url: "",
+  },
+  {
+    platform: "linkedin",
+    url: "",
+  },
+  {
+    platform: "linktree",
+    url: "",
+  },
+];

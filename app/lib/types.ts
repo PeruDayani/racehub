@@ -91,9 +91,15 @@ export type Ticket = Ticket_DB & {
   raceOptionPrice: RaceOptionPrice;
 };
 
-
 export type SocialLink = {
-  platform: "facebook" | "instagram" | "youtube" | "tiktok" | "x" | "linkedin" | "linktree";
+  platform:
+    | "facebook"
+    | "instagram"
+    | "youtube"
+    | "tiktok"
+    | "x"
+    | "linkedin"
+    | "linktree";
   url: string;
 };
 

@@ -13,8 +13,14 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
-import { DEFAULT_WEBSITE } from "@/app/lib/constants";
-import type { Media, RaceStatus, SocialLink, Sponsorship, Website } from "@/app/lib/types";
+import { DEFAULT_SOCIAL_MEDIA, DEFAULT_WEBSITE } from "@/app/lib/constants";
+import type {
+  Media,
+  RaceStatus,
+  SocialMedia,
+  Sponsorship,
+  Website,
+} from "@/app/lib/types";
 
 // =============================
 // Tables
@@ -54,6 +60,10 @@ export const races = pgTable("races", {
     .default([])
     .notNull(),
   website: jsonb("website").$type<Website>().notNull().default(DEFAULT_WEBSITE),
+  socialMedia: jsonb("social_media")
+    .$type<SocialMedia>()
+    .default(DEFAULT_SOCIAL_MEDIA)
+    .notNull(),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
