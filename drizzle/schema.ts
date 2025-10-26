@@ -14,7 +14,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
 import { DEFAULT_WEBSITE } from "@/app/lib/constants";
-import type { Media, RaceStatus, Sponsorship, Website } from "@/app/lib/types";
+import type { Media, RaceStatus, SocialLink, Sponsorship, Website } from "@/app/lib/types";
 
 // =============================
 // Tables

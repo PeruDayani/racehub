@@ -7,7 +7,11 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check --write --unsafe",
-    "migrate": "npx drizzle-kit generate && npx drizzle-kit migrate"
+    "db:check": "npx drizzle-kit check",
+    "db:local:push": "npx drizzle-kit push",
+    "db:local:migrate": "npx drizzle-kit migrate",
+    "db:local:generate": "npx drizzle-kit generate",
+    "db:prod:apply": "NODE_ENV=production npx drizzle-kit check && npx drizzle-kit migrate"
   },
   "dependencies": {
     "@mantine/core": "^8.3.5",
