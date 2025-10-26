@@ -1,4 +1,13 @@
-import type { SocialMedia, Website } from "./types";
+import {
+  Facebook,
+  Instagram,
+  Linkedin,
+  LinkIcon,
+  Music,
+  Twitter,
+  Youtube,
+} from "lucide-react";
+import type { SocialLink, SocialMedia, Website } from "./types";
 
 export const PUBLIC_ROUTES = [
   "/auth",
@@ -83,3 +92,16 @@ export const DEFAULT_SOCIAL_MEDIA: SocialMedia = [
     url: "",
   },
 ];
+
+export const PLATFORM_CONFIG: Record<
+  SocialLink["platform"],
+  { icon: React.ElementType; label: string }
+> = {
+  facebook: { icon: Facebook, label: "Facebook" },
+  instagram: { icon: Instagram, label: "Instagram" },
+  youtube: { icon: Youtube, label: "YouTube" },
+  tiktok: { icon: Music, label: "TikTok" },
+  x: { icon: Twitter, label: "X (Twitter)" },
+  linkedin: { icon: Linkedin, label: "LinkedIn" },
+  linktree: { icon: LinkIcon, label: "Linktree" },
+};

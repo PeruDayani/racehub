@@ -1,31 +1,10 @@
 "use client";
 
 import { Box, Group, Stack, TextInput } from "@mantine/core";
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  Link as LinkIcon,
-  Music,
-  Twitter,
-  Youtube,
-} from "lucide-react";
 import PageHeader from "@/app/components/PageHeader.tsx/PageHeader";
 import { useRaceStore } from "@/app/context/RaceStoreContext";
+import { PLATFORM_CONFIG } from "@/app/lib/constants";
 import type { SocialLink } from "@/app/lib/types";
-
-const PLATFORM_CONFIG: Record<
-  SocialLink["platform"],
-  { icon: React.ElementType; label: string }
-> = {
-  facebook: { icon: Facebook, label: "Facebook" },
-  instagram: { icon: Instagram, label: "Instagram" },
-  youtube: { icon: Youtube, label: "YouTube" },
-  tiktok: { icon: Music, label: "TikTok" },
-  x: { icon: Twitter, label: "X (Twitter)" },
-  linkedin: { icon: Linkedin, label: "LinkedIn" },
-  linktree: { icon: LinkIcon, label: "Linktree" },
-};
 
 export default function SocialMediaEditor() {
   const socialMedia = useRaceStore((state) => state.getSocialMedia());
