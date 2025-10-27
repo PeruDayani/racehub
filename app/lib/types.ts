@@ -1,4 +1,4 @@
-import type { User } from "@supabase/supabase-js";
+import type { User } from '@supabase/supabase-js';
 import type {
   addresses,
   profiles,
@@ -6,7 +6,7 @@ import type {
   raceOptions,
   races,
   tickets,
-} from "../../drizzle/schema";
+} from '../../drizzle/schema';
 
 // Re-export Supabase User type for convenience
 export type { User };
@@ -49,10 +49,10 @@ export type Race = Race_DB & {
   options: RaceOption[];
 };
 
-export type AddressType = "race" | "user";
-export type AddressInput = Omit<Address_DB, "id" | "createdAt" | "updatedAt">;
+export type AddressType = 'race' | 'user';
+export type AddressInput = Omit<Address_DB, 'id' | 'createdAt' | 'updatedAt'>;
 
-export type RaceStatus = "draft" | "live" | "finished";
+export type RaceStatus = 'draft' | 'live' | 'finished';
 
 export type Website = {
   description: string;
@@ -73,7 +73,7 @@ export type Sponsorship = {
   description: string;
   logo?: Media;
   websiteUrl?: string;
-  tier: "gold" | "silver" | "bronze";
+  tier: 'gold' | 'silver' | 'bronze';
 };
 
 export type Media = {
@@ -81,7 +81,7 @@ export type Media = {
   path: string;
 };
 
-export type MediaBucket = "profile" | "website" | "waivers";
+export type MediaBucket = 'profile' | 'website' | 'waivers';
 
 export type Ticket = Ticket_DB & {
   race: Race_DB & {
@@ -90,3 +90,10 @@ export type Ticket = Ticket_DB & {
   raceOption: RaceOption_DB;
   raceOptionPrice: RaceOptionPrice;
 };
+
+export type SocialLink = {
+  platform: 'facebook' | 'instagram' | 'youtube' | 'tiktok' | 'x' | 'linkedin' | 'linktree';
+  url: string;
+};
+
+export type SocialMedia = SocialLink[];
