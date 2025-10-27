@@ -1,0 +1,1 @@
+ALTER TABLE "races" ADD COLUMN "social_media" jsonb DEFAULT '[{"platform":"facebook","url":""},{"platform":"instagram","url":""},{"platform":"youtube","url":""},{"platform":"tiktok","url":""},{"platform":"x","url":""},{"platform":"linkedin","url":""},{"platform":"linktree","url":""}]'::jsonb NOT NULL;
