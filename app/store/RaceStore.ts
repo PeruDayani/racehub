@@ -8,6 +8,10 @@ import {
 } from "./RaceOptionsSlice";
 import { createRaceSlice, type RaceSlice } from "./RaceSlice";
 import {
+  createSocialMediaSlice,
+  type SocialMediaSlice,
+} from "./SocialMediaSlice";
+import {
   createSponsorshipSlice,
   type SponsorshipSlice,
 } from "./SponsorshipSlice";
@@ -18,7 +22,8 @@ enableMapSet();
 export type RaceStore = RaceSlice &
   RaceOptionsSlice &
   SponsorshipSlice &
-  WebsiteSlice;
+  WebsiteSlice &
+  SocialMediaSlice;
 
 export const createRaceStore = (initialRace: Race) => {
   return createStore<RaceStore>()(
@@ -27,6 +32,7 @@ export const createRaceStore = (initialRace: Race) => {
       ...createRaceOptionsSlice()(...args),
       ...createSponsorshipSlice()(...args),
       ...createWebsiteSlice()(...args),
+      ...createSocialMediaSlice()(...args),
     })),
   );
 };
