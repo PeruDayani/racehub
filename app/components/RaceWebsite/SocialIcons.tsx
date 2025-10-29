@@ -27,8 +27,10 @@ export default function SocialIcons({
 }: Props) {
   // Prefer top-level `race.socialMedia`, fall back to website if you ever move it
   const links: SocialLink[] = race.socialMedia ?? [];
+  console.log("links:", links)
 
-  const active = (links || []).filter((l) => (!l?.url));
+  const active = (links || []).filter((l) => l.url && l.url.trim() !== "");
+  console.log("Active:", active)
 
   if (active.length === 0) return null;
 
