@@ -11,8 +11,6 @@ type Props = {
   size?: number;
   /** Group wrap behavior; footer usually "nowrap" */
   wrap?: "nowrap" | "wrap";
-  /** Extra filtering if you store enabled flags */
-  filterDisabled?: boolean;
 };
 
 const normalizeUrl = (url: string) =>
@@ -23,7 +21,6 @@ export default function SocialIcons({
   heading,
   size = 20,
   wrap = "nowrap",
-  filterDisabled = true,
 }: Props) {
   // Prefer top-level `race.socialMedia`, fall back to website if you ever move it
   const links: SocialLink[] = race.socialMedia ?? [];
