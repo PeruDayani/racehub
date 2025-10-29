@@ -1,5 +1,6 @@
 import { Container, Stack } from "@mantine/core";
 import { getLiveRaceBySlugAction } from "@/app/actions/raceActions";
+import SocialIcons from "@/app/components/RaceWebsite/SocialIcons";
 import DisplayError from "@/app/components/DisplayError/DisplayError";
 import RaceDetailsGrid from "@/app/components/RaceWebsite/RaceDetailsGrid";
 import RaceHeader from "@/app/components/RaceWebsite/RaceHeader";
@@ -37,6 +38,7 @@ export default async function RacePage({
         <RaceOptionsGrid race={raceData} />
         <RaceSponsorships race={raceData} />
         <RaceSections race={raceData} />
+        <SocialIcons race={raceData} heading="Follow Us" wrap="wrap" size={22} />
       </Stack>
     </Container>
   );
