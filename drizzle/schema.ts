@@ -11,9 +11,11 @@ import {
   time,
   timestamp,
   uuid,
+  varchar,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
-import { DEFAULT_SOCIAL_MEDIA, DEFAULT_WEBSITE } from "@/app/lib/constants";
+import { DEFAULT_SOCIAL_MEDIA, DEFAULT_WEBSITE, bytea } from "@/app/lib/constants";
 import type {
   Media,
   RaceStatus,
@@ -153,6 +155,25 @@ export const tickets = pgTable("tickets", {
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
 
+export const waivers = pgTable("waivers", {
+  id: serial("id").primaryKey().notNull(),
+  raceId: integer("race_id")
+  .notNull()
+  .references(() => races.id, { onDelete: "no action" }),
+
+  // The file itself
+  fileBytes: bytea("file_bytes").notNull(),                 // PDF bytes
+  mimeType: varchar("mime_type", { length: 100 }).notNull(),// "application/pdf"
+  fileName: varchar("file_name", { length: 255 }).notNull(),
+  byteSize: integer("byte_size").notNull(),
+  sha256: varchar("sha256", { length: 64 }).notNull(),      // hex string
+
+  // Admin / control
+  enabled: boolean("enabled").notNull().default(true),
+  uploadedByUserId: integer("uploaded_by_user_id"),
+  uploadedAt: timestamp("uploaded_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 // =============================
 // Relations
 // =============================
@@ -176,6 +197,7 @@ export const racesRelations = relations(races, ({ one, many }) => ({
   options: many(raceOptions),
   optionPrices: many(raceOptionPrices),
   tickets: many(tickets),
+  waivers: many(waivers),
 }));
 
 export const raceOptionsRelations = relations(raceOptions, ({ one, many }) => ({
@@ -220,3 +242,11 @@ export const ticketsRelations = relations(tickets, ({ one }) => ({
     references: [raceOptionPrices.id],
   }),
 }));
+
+export const waiverRelations = relations(waivers, ({ one }) => ({
+  race: one(races, {
+    fields: [waivers.raceId],
+    references: [races.id],
+  }),
+}));
+

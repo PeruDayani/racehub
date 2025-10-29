@@ -104,3 +104,5 @@ export type SocialLink = {
 };
 
 export type SocialMedia = SocialLink[];
+
+

@@ -18,6 +18,8 @@ export const PUBLIC_ROUTES = [
   "/api/stripe/webhook",
 ];
 
+import {customType} from "drizzle-orm/pg-core"
+
 // Profile dropdown options
 export const GENDER_OPTIONS = [
   { value: "male", label: "Male" },
@@ -106,3 +108,16 @@ export const PLATFORM_CONFIG: Record<
   linkedin: { icon: Linkedin, label: "LinkedIn" },
   linktree: { icon: LinkIcon, label: "Linktree" },
 };
+
+// Create reusable custom BYTEA type
+export const bytea = customType<{ data: Buffer | null }>({
+  dataType() {
+    return "bytea";
+  },
+  toDriver(value) {
+    return value; // should be a Node.js Buffer
+  },
+  fromDriver(value) {
+    return value as Buffer;
+  },
+});
