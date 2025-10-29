@@ -26,12 +26,9 @@ export default function SocialIcons({
   filterDisabled = true,
 }: Props) {
   // Prefer top-level `race.socialMedia`, fall back to website if you ever move it
-  const links: SocialLink[] = race.socialMedia ?? race.website?.socialMedia ?? [];
+  const links: SocialLink[] = race.socialMedia ?? [];
 
-  const active = (links || []).filter((l) => {
-    if (!l?.url) return false;
-    return filterDisabled ? (l.enabled ?? true) : true;
-  });
+  const active = (links || []).filter((l) => (!l?.url));
 
   if (active.length === 0) return null;
 
