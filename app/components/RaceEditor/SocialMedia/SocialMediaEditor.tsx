@@ -9,7 +9,6 @@ import type { SocialLink } from '@/app/lib/types';
 export default function SocialMediaEditor() {
   const socialMedia = useRaceStore((state) => state.getSocialMedia());
   const updateSocialLink = useRaceStore((state) => state.updateSocialLink);
-  const race = useRaceStore((s) => s.getRace());
 
   return (
     <Box p="xl" w="100%" maw={1200} mx="auto">
