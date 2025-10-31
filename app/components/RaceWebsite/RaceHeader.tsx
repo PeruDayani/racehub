@@ -1,5 +1,8 @@
+"use client";
+
 import { Badge, Group, Title } from "@mantine/core";
 import type { Race } from "@/app/lib/types";
+import { useRaceStore } from "@/app/context/RaceStoreContext";
 
 interface RaceHeaderProps {
   race: Race;
@@ -10,6 +13,8 @@ export default function RaceHeader({
   race,
   showStatus = false,
 }: RaceHeaderProps) {
+  const raceStatus = useRaceStore((state) => state.race.status);
+  
   const getStatusColor = (status: string) => {
     switch (status) {
       case "published":
