@@ -369,6 +369,7 @@ export async function updateRaceAction(
           sponsorships: race.sponsorships,
           website: race.website,
           socialMedia: race.socialMedia,
+          waivers: race.waivers,
           addressId,
           updatedAt: new Date().toISOString(),
         })

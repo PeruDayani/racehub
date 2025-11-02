@@ -1,11 +1,13 @@
 "use client";
 
-import { Box, Button, Group, Image, Text } from "@mantine/core";
+import { Anchor, Box, Button, Group, Image, Text } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { Image as ImageIcon, Upload, X } from "lucide-react";
+import { FileText, Image as ImageIcon, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { deleteMedia, uploadMedia } from "@/app/lib/supabase/media";
 import type { Media, MediaBucket } from "@/app/lib/types";
+
+const PDF_MIME_TYPE = { "application/pdf": [] };
 
 interface MediaUploadProps {
   currentMedia?: Media | null;
@@ -31,6 +33,36 @@ export default function MediaUpload({
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Helper to check if media is PDF
+  const isPdfUrl = (url: string | undefined) =>
+    !!url && url.toLowerCase().endsWith(".pdf");
+
+  // Helper to get MIME types for dropzone
+  const getAcceptMimeTypes = () => {
+    if (accept === "image/*") {
+      return IMAGE_MIME_TYPE;
+    }
+    if (accept === "application/pdf") {
+      return PDF_MIME_TYPE;
+    }
+    // Handle multiple types like "image/*,application/pdf"
+    if (accept?.includes(",")) {
+      const types = accept.split(",").map((t) => t.trim());
+      const result: Record<string, string[]> = {};
+      types.forEach((type) => {
+        if (type === "image/*") {
+          Object.assign(result, IMAGE_MIME_TYPE);
+        } else if (type === "application/pdf") {
+          Object.assign(result, PDF_MIME_TYPE);
+        } else {
+          result[type] = [];
+        }
+      });
+      return result;
+    }
+    return { [accept]: [] };
+  };
+
   const handleFileSelect = async (files: File[]) => {
     const file = files[0];
     if (!file) return;
@@ -42,9 +74,21 @@ export default function MediaUpload({
     }
 
     // Validate file type
-    if (accept && !file.type.match(accept.replace("*", ".*"))) {
-      setError("Invalid file type");
-      return;
+    if (accept) {
+      const acceptPatterns = accept.split(",").map((a) => a.trim());
+      const isAccepted = acceptPatterns.some((pattern) => {
+        if (pattern === "image/*") {
+          return file.type.startsWith("image/");
+        }
+        if (pattern === "application/pdf") {
+          return file.type === "application/pdf";
+        }
+        return file.type.match(pattern.replace("*", ".*"));
+      });
+      if (!isAccepted) {
+        setError("Invalid file type");
+        return;
+      }
     }
 
     setError(null);
@@ -126,19 +170,47 @@ export default function MediaUpload({
               Remove
             </Button>
           </Group>
-          <Box
-            style={{
-              border: "1px solid var(--mantine-color-gray-3)",
-              borderRadius: "var(--mantine-radius-md)",
-              overflow: "hidden",
-            }}
-          >
-            <Image
-              src={currentMedia.url}
-              alt={label}
-              style={{ maxHeight: 200, objectFit: "contain" }}
-            />
-          </Box>
+          {isPdfUrl(currentMedia.url) ? (
+            <Box
+              style={{
+                border: "1px solid var(--mantine-color-gray-3)",
+                borderRadius: "var(--mantine-radius-md)",
+                padding: "var(--mantine-spacing-md)",
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--mantine-spacing-sm)",
+              }}
+            >
+              <FileText size={48} color="var(--mantine-color-red-6)" />
+              <Box style={{ flex: 1 }}>
+                <Text size="sm" fw={500}>
+                  PDF Document
+                </Text>
+                <Anchor
+                  href={currentMedia.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  size="sm"
+                >
+                  View PDF
+                </Anchor>
+              </Box>
+            </Box>
+          ) : (
+            <Box
+              style={{
+                border: "1px solid var(--mantine-color-gray-3)",
+                borderRadius: "var(--mantine-radius-md)",
+                overflow: "hidden",
+              }}
+            >
+              <Image
+                src={currentMedia.url}
+                alt={label}
+                style={{ maxHeight: 200, objectFit: "contain" }}
+              />
+            </Box>
+          )}
         </Box>
       ) : (
         <Dropzone
@@ -154,7 +226,7 @@ export default function MediaUpload({
             }
           }}
           maxSize={maxSize * 1024 * 1024}
-          accept={accept === "image/*" ? IMAGE_MIME_TYPE : { [accept]: [] }}
+          accept={getAcceptMimeTypes()}
           multiple={false}
           disabled={isUploading}
         >
@@ -171,7 +243,11 @@ export default function MediaUpload({
               <X size={48} color="var(--mantine-color-red-6)" />
             </Dropzone.Reject>
             <Dropzone.Idle>
-              <ImageIcon size={48} color="var(--mantine-color-gray-5)" />
+              {accept?.includes("pdf") && !accept?.includes("image") ? (
+                <FileText size={48} color="var(--mantine-color-gray-5)" />
+              ) : (
+                <ImageIcon size={48} color="var(--mantine-color-gray-5)" />
+              )}
             </Dropzone.Idle>
 
             <div>
