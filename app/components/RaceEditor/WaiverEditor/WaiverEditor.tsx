@@ -9,7 +9,6 @@ export default function WaiverEditor() {
   const raceId = useRaceStore((state) => state.race.id);
   const waiver = useRaceStore((state) => state.race.waivers);
   const addWaiver = useRaceStore((state) => state.addWaiver);
-  const _race = useRaceStore((s) => s.race);
   return (
     <Box p="xl" w="100%" maw={1200} mx="auto">
       <Stack gap="lg" pos="relative">
