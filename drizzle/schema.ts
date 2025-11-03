@@ -168,7 +168,9 @@ export const practiceRuns = pgTable("practice_runs", {
 
 export const runLocations = pgTable("run_locations", {
   id: serial("id").primaryKey(),
-  runId: uuid("run_id").references(() => practiceRuns.id, { onDelete: "cascade" }),
+  runId: uuid("run_id").references(() => practiceRuns.id, {
+    onDelete: "cascade",
+  }),
   latitude: numeric("latitude").notNull(),
   longitude: numeric("longitude").notNull(),
   accuracy: numeric("accuracy"),

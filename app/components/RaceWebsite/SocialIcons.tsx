@@ -1,5 +1,5 @@
+import { ActionIcon, Box, Group, Title } from "@mantine/core";
 import Link from "next/link";
-import { Box, Group, ActionIcon, Title } from "@mantine/core";
 import { PLATFORM_CONFIG } from "@/app/lib/constants";
 import type { Race, SocialLink } from "@/app/lib/types";
 
