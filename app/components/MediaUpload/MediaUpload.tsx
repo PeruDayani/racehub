@@ -45,21 +45,6 @@ export default function MediaUpload({
     if (accept === "application/pdf") {
       return PDF_MIME_TYPE;
     }
-    // Handle multiple types like "image/*,application/pdf"
-    if (accept?.includes(",")) {
-      const types = accept.split(",").map((t) => t.trim());
-      const result: Record<string, string[]> = {};
-      types.forEach((type) => {
-        if (type === "image/*") {
-          Object.assign(result, IMAGE_MIME_TYPE);
-        } else if (type === "application/pdf") {
-          Object.assign(result, PDF_MIME_TYPE);
-        } else {
-          result[type] = [];
-        }
-      });
-      return result;
-    }
     return { [accept]: [] };
   };
 
@@ -75,16 +60,14 @@ export default function MediaUpload({
 
     // Validate file type
     if (accept) {
-      const acceptPatterns = accept.split(",").map((a) => a.trim());
-      const isAccepted = acceptPatterns.some((pattern) => {
-        if (pattern === "image/*") {
-          return file.type.startsWith("image/");
-        }
-        if (pattern === "application/pdf") {
-          return file.type === "application/pdf";
-        }
-        return file.type.match(pattern.replace("*", ".*"));
-      });
+      let isAccepted = false;
+      if (accept === "image/*") {
+        isAccepted = file.type.startsWith("image/");
+      } else if (accept === "application/pdf") {
+        isAccepted = file.type === "application/pdf";
+      } else {
+        isAccepted = file.type.match(accept.replace("*", ".*")) !== null;
+      }
       if (!isAccepted) {
         setError("Invalid file type");
         return;
