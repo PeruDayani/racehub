@@ -7,6 +7,10 @@ What follows is a messy dialogue of what goes on in Peru's head as he is coding.
 
 ### Mobile App
 
+> Let's cut our first release this weekend - Peru, Oct 31st
+
+> Tomorrow has arrived - Peru, Oct 27th
+
 > We're starting on the Mobile App next :) - Peru, Oct 25th
 
 > Please start on the Mobile App soon  - Peru, Oct 16th
@@ -16,34 +20,46 @@ What follows is a messy dialogue of what goes on in Peru's head as he is coding.
 
 #### Small things that will go a long way
 
-- Drizzle Migrations - Create a cmd to easily apply migrations to prod
-- Drizzle Migrations - how to merge changes across Colin/Peru codebases?
-- Button to create mock Race
+- Button to create mock race
 - Wire up UserContext
 
-#### A defintely doable albeit long list of everything else
+#### A defintely doable albeit long list of everything else for MVP
 
-Once we have tickets:
-- Update the dashboard to show basic stats.
-- Add social links to website - this could be a good one for Colin?
+---- Race Curation ----
+- Waivers Input -> Basic waiver + Custom upload
+- Waivers Signing -> Users sign + Stored in DB
+- Discount Codes -> Creating and managing
+- Discount Codes -> Using + counter
+- Payment Config -> Connect back accounts
+- Emails -> Authentication Workflow
+- Emails -> Ticket confirmation
+- Emails -> Reminders
+- Marketing -> Customizable Emails
 
-And then we improve the Stripe worklow
-- Ability to buy multiple tickets
-- An input form for Waivers / Basic Info
-- Add support for taxes - https://stripe.com/tax
-- Add support for discount codes???
+--- Ticketing ----
+- Dashboard signup stats
+- Dashboard revenue stats
+- User Management -> big one
 
-And then the Race Management Page.
-- Oof, there's a lot
+---- Race Day ----
 
-Bugs:
-- Sign In -> Sign Up losses the redirect url
+- Check in users
+- Quick process payments
 
-### Take 3: Future Improvements:
-- Clean up the Type definitions a bit more, might be worth manually defining the types
-- Seperate npm command for Prod Migration?
+--- 3rd time's the charm ----
+
+- Search sentence filter: I want to run x km in y city ...
+- Stripe Tax
+- Stripe Discounts
+- Stripe Elements to allow for custom inputs
+- Authentication Modals
+- Better Navigation
+- Better Create Workflow
+- Multiple tickets?
+- Manual Type definition?
 - Prod Migrations on deploy via Vercel hook?
-- Autosave + Media changes should save?
+- Autosave hook
+- Relational tables can be directly updated?
 - Define Supabase Buckets using migrations
 - Define Supabase RLS using Drizzle: https://orm.drizzle.team/docs/rls#using-with-supabase
 

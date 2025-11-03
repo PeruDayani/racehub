@@ -154,6 +154,30 @@ export const tickets = pgTable("tickets", {
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
 
+export const practiceRuns = pgTable("practice_runs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").references(() => authUsers.id),
+  ticketId: uuid("ticket_id").references(() => tickets.id),
+  startedAt: timestamp("started_at").notNull(),
+  endedAt: timestamp("ended_at"),
+  totalDistanceMeters: numeric("total_distance_meters").default("0"),
+  totalDurationSeconds: integer("total_duration_seconds").default(0),
+  averagePaceSecondsPerKm: numeric("average_pace_seconds_per_km"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const runLocations = pgTable("run_locations", {
+  id: serial("id").primaryKey(),
+  runId: uuid("run_id").references(() => practiceRuns.id, { onDelete: "cascade" }),
+  latitude: numeric("latitude").notNull(),
+  longitude: numeric("longitude").notNull(),
+  accuracy: numeric("accuracy"),
+  altitude: numeric("altitude"),
+  heading: numeric("heading"),
+  speed: numeric("speed"),
+  timestamp: timestamp("timestamp").notNull(),
+});
+
 // =============================
 // Relations
 // =============================
