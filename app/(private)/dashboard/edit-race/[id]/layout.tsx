@@ -9,7 +9,7 @@ type EditRaceLayoutProps = {
   children: React.ReactNode;
 };
 
-export default async function EditRaceLsayout({
+export default async function EditRaceLayout({
   params,
   children,
 }: EditRaceLayoutProps) {
