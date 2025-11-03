@@ -7,6 +7,7 @@ import { useState } from "react";
 import { deleteMedia, uploadMedia } from "@/app/lib/supabase/media";
 import type { Media, MediaBucket } from "@/app/lib/types";
 
+// MIME type format for PDF files that Mantine Dropzone expects
 const PDF_MIME_TYPE = { "application/pdf": [] };
 
 interface MediaUploadProps {
