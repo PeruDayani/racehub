@@ -69,7 +69,7 @@ export default function MediaUpload({
     setIsUploading(true);
 
     try {
-      const fileName = `${Date.now()}-${file.name}`;
+      const fileName = `${label.toLowerCase()}-${file.name}-${Date.now()}`;
       const result = await uploadMedia({
         file,
         fileName,
