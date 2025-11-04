@@ -1,14 +1,20 @@
 "use client";
 
 import { Anchor, Box, Button, Group, Image, Text } from "@mantine/core";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { FileText, Image as ImageIcon, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { deleteMedia, uploadMedia } from "@/app/lib/supabase/media";
 import type { Media, MediaBucket } from "@/app/lib/types";
 
 // MIME type format for PDF files that Mantine Dropzone expects
-const PDF_MIME_TYPE = { "application/pdf": [] };
+
+type ACCEPTED_MIME_TYPES = "image/*" | "application/pdf";
+
+const ACCEPT_MIME_TYPES: Record<ACCEPTED_MIME_TYPES, string[]> = {
+  "image/*": IMAGE_MIME_TYPE,
+  "application/pdf": PDF_MIME_TYPE,
+};
 
 interface MediaUploadProps {
   currentMedia?: Media | null;
@@ -17,7 +23,7 @@ interface MediaUploadProps {
   folderId: string;
   label: string;
   description?: string;
-  accept?: string;
+  accept?: ACCEPTED_MIME_TYPES;
   maxSize?: number; // in MB
 }
 
@@ -34,20 +40,9 @@ export default function MediaUpload({
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Helper to check if media is PDF
-  const isPdfUrl = (url: string | undefined) =>
-    !!url && url.toLowerCase().endsWith(".pdf");
-
-  // Helper to get MIME types for dropzone
-  const getAcceptMimeTypes = () => {
-    if (accept === "image/*") {
-      return IMAGE_MIME_TYPE;
-    }
-    if (accept === "application/pdf") {
-      return PDF_MIME_TYPE;
-    }
-    return { [accept]: [] };
-  };
+  const isImage = accept === "image/*";
+  const isPdf = accept === "application/pdf";
+  const DropzoneIcon = isPdf ? FileText : ImageIcon;
 
   const handleFileSelect = async (files: File[]) => {
     const file = files[0];
@@ -60,19 +55,14 @@ export default function MediaUpload({
     }
 
     // Validate file type
-    if (accept) {
-      let isAccepted = false;
-      if (accept === "image/*") {
-        isAccepted = file.type.startsWith("image/");
-      } else if (accept === "application/pdf") {
-        isAccepted = file.type === "application/pdf";
-      } else {
-        isAccepted = file.type.match(accept.replace("*", ".*")) !== null;
-      }
-      if (!isAccepted) {
-        setError("Invalid file type");
-        return;
-      }
+    const isAccepted =
+      accept === "image/*"
+        ? file.type.startsWith("image/")
+        : file.type === "application/pdf";
+
+    if (!isAccepted) {
+      setError("Invalid file type");
+      return;
     }
 
     setError(null);
@@ -154,7 +144,7 @@ export default function MediaUpload({
               Remove
             </Button>
           </Group>
-          {isPdfUrl(currentMedia.url) ? (
+          {isPdf && (
             <Box
               style={{
                 border: "1px solid var(--mantine-color-gray-3)",
@@ -165,7 +155,7 @@ export default function MediaUpload({
                 gap: "var(--mantine-spacing-sm)",
               }}
             >
-              <FileText size={48} color="var(--mantine-color-red-6)" />
+              <FileText size={48} color="var(--mantine-color-green-4)" />
               <Box style={{ flex: 1 }}>
                 <Text size="sm" fw={500}>
                   PDF Document
@@ -180,7 +170,8 @@ export default function MediaUpload({
                 </Anchor>
               </Box>
             </Box>
-          ) : (
+          )}
+          {isImage && (
             <Box
               style={{
                 border: "1px solid var(--mantine-color-gray-3)",
@@ -193,6 +184,13 @@ export default function MediaUpload({
                 alt={label}
                 style={{ maxHeight: 200, objectFit: "contain" }}
               />
+            </Box>
+          )}
+          {!isPdf && !isImage && (
+            <Box>
+              <Text size="sm" c="dimmed">
+                Unsupported file type
+              </Text>
             </Box>
           )}
         </Box>
@@ -210,7 +208,7 @@ export default function MediaUpload({
             }
           }}
           maxSize={maxSize * 1024 * 1024}
-          accept={getAcceptMimeTypes()}
+          accept={ACCEPT_MIME_TYPES[accept]}
           multiple={false}
           disabled={isUploading}
         >
@@ -227,11 +225,7 @@ export default function MediaUpload({
               <X size={48} color="var(--mantine-color-red-6)" />
             </Dropzone.Reject>
             <Dropzone.Idle>
-              {accept?.includes("pdf") && !accept?.includes("image") ? (
-                <FileText size={48} color="var(--mantine-color-gray-5)" />
-              ) : (
-                <ImageIcon size={48} color="var(--mantine-color-gray-5)" />
-              )}
+              <DropzoneIcon size={48} color="var(--mantine-color-gray-5)" />
             </Dropzone.Idle>
 
             <div>
