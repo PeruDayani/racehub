@@ -64,6 +64,7 @@ export const races = pgTable("races", {
     .$type<SocialMedia>()
     .default(DEFAULT_SOCIAL_MEDIA)
     .notNull(),
+  waivers: jsonb("waivers").$type<Media>(),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
@@ -167,7 +168,9 @@ export const practiceRuns = pgTable("practice_runs", {
 
 export const runLocations = pgTable("run_locations", {
   id: serial("id").primaryKey(),
-  runId: uuid("run_id").references(() => practiceRuns.id, { onDelete: "cascade" }),
+  runId: uuid("run_id").references(() => practiceRuns.id, {
+    onDelete: "cascade",
+  }),
   latitude: numeric("latitude").notNull(),
   longitude: numeric("longitude").notNull(),
   accuracy: numeric("accuracy"),

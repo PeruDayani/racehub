@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import { Box, Group, Stack, TextInput } from '@mantine/core';
-import PageHeader from '@/app/components/PageHeader.tsx/PageHeader';
-import { useRaceStore } from '@/app/context/RaceStoreContext';
-import { PLATFORM_CONFIG } from '@/app/lib/constants';
-import type { SocialLink } from '@/app/lib/types';
+import { Box, Group, Stack, TextInput } from "@mantine/core";
+import PageHeader from "@/app/components/PageHeader.tsx/PageHeader";
+import { useRaceStore } from "@/app/context/RaceStoreContext";
+import { PLATFORM_CONFIG } from "@/app/lib/constants";
+import type { SocialLink } from "@/app/lib/types";
 
 export default function SocialMediaEditor() {
   const socialMedia = useRaceStore((state) => state.getSocialMedia());
   const updateSocialLink = useRaceStore((state) => state.updateSocialLink);
-  const race = useRaceStore((s) => s.getRace());
 
   return (
     <Box p="xl" w="100%" maw={1200} mx="auto">
@@ -21,7 +20,7 @@ export default function SocialMediaEditor() {
           py={12}
           style={{
             zIndex: 200,
-            backgroundColor: 'var(--mantine-color-body)',
+            backgroundColor: "var(--mantine-color-body)",
           }}
         >
           <PageHeader
