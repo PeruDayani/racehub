@@ -20,6 +20,8 @@ export type RaceSliceActions = {
   updateRaceField: (field: keyof Race, value: any) => void;
   saveRace: () => Promise<{ success: boolean; message: string }>;
   markRaceAsLive: () => Promise<{ success: boolean; message: string }>;
+  setRaceStartLat: (lat: number | null) => void;
+  setRaceStartLon: (lon: number | null) => void;
 
   debugRace: () => void;
 };
@@ -119,5 +121,13 @@ export const createRaceSlice =
         );
         console.log(race);
       },
+      setRaceStartLat: (lat: number | null) =>
+        set((state) => {
+          state.race.startLat = lat;
+        }),
+      setRaceStartLon: (lon: number | null) =>
+        set((state) => {
+          state.race.startLon = lon;
+        }),
     };
   };

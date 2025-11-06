@@ -11,6 +11,7 @@ import {
   time,
   timestamp,
   uuid,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
 import { DEFAULT_SOCIAL_MEDIA, DEFAULT_WEBSITE } from "@/app/lib/constants";
@@ -65,6 +66,10 @@ export const races = pgTable("races", {
     .default(DEFAULT_SOCIAL_MEDIA)
     .notNull(),
   waivers: jsonb("waivers").$type<Media>(),
+  startLat: doublePrecision("start_lat"),
+  startLon: doublePrecision("start_lon"),
+  endLat: doublePrecision("end_lat"),
+  endLon: doublePrecision("end_lon"),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });
