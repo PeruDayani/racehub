@@ -22,6 +22,8 @@ export type RaceSliceActions = {
   markRaceAsLive: () => Promise<{ success: boolean; message: string }>;
   setRaceStartLat: (lat: number | null) => void;
   setRaceStartLon: (lon: number | null) => void;
+  setRaceEndLat: (lat: number | null) => void;
+  setRaceEndLon: (lon: number | null) => void;
 
   debugRace: () => void;
 };
@@ -128,6 +130,14 @@ export const createRaceSlice =
       setRaceStartLon: (lon: number | null) =>
         set((state) => {
           state.race.startLon = lon;
+        }),
+      setRaceEndLat: (lat: number | null) =>
+        set((state) => {
+          state.race.endLat = lat;
+        }),
+      setRaceEndLon: (lon: number | null) =>
+        set((state) => {
+          state.race.endLon = lon;
         }),
     };
   };
