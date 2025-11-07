@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   date,
+  doublePrecision,
   integer,
   jsonb,
   numeric,
@@ -11,7 +12,6 @@ import {
   time,
   timestamp,
   uuid,
-  doublePrecision,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
 import { DEFAULT_SOCIAL_MEDIA, DEFAULT_WEBSITE } from "@/app/lib/constants";

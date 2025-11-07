@@ -1,13 +1,9 @@
 "use client";
 
-import {
-  Card,
-  NumberInput,
-  Text,
-  Stack,
-} from "@mantine/core";
+import { Card, NumberInput, Stack, Text } from "@mantine/core";
 
-import React, {useState, useEffect, useRef} from 'react';
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useRaceStore } from "@/app/context/RaceStoreContext";
 
@@ -73,7 +69,9 @@ function GpsCoordinateCard({
   return (
     <Card withBorder shadow="sm" radius="md" py="lg">
       <Card.Section inheritPadding py="xs">
-        <Text fw={500} mb="md">{title}</Text>
+        <Text fw={500} mb="md">
+          {title}
+        </Text>
       </Card.Section>
       <Card.Section inheritPadding py="xs">
         <div className="grid grid-cols-2 gap-3">

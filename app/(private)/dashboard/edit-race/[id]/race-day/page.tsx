@@ -2,7 +2,7 @@
 
 import { Box, Stack } from "@mantine/core";
 import PageHeader from "@/app/components/PageHeader.tsx/PageHeader";
-import GpsInputs from "@/app/components/RaceEditor/RaceDay/GpsInputs_copy";
+import GpsInputs from "@/app/components/RaceEditor/RaceDay/GpsInputs";
 
 export default function RaceDay() {
   return (
@@ -18,7 +18,10 @@ export default function RaceDay() {
             backgroundColor: "var(--mantine-color-body)",
           }}
         >
-          <PageHeader title="Race Day" description="Configure GPS tracking for race day" />
+          <PageHeader
+            title="Race Day"
+            description="Configure GPS tracking for race day"
+          />
         </Stack>
 
         <Stack gap="xl" px={2}>
