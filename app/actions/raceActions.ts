@@ -370,6 +370,10 @@ export async function updateRaceAction(
           website: race.website,
           socialMedia: race.socialMedia,
           waivers: race.waivers,
+          startLat: race.startLat,
+          startLon: race.startLon,
+          endLat: race.endLat,
+          endLon: race.endLon,
           addressId,
           updatedAt: new Date().toISOString(),
         })
