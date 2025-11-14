@@ -81,7 +81,7 @@ export type Media = {
   path: string;
 };
 
-export type MediaBucket = "profile" | "website" | "waivers";
+export type MediaBucket = "profile" | "website" | "gpx";
 
 export type Ticket = Ticket_DB & {
   race: Race_DB & {

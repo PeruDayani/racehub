@@ -70,6 +70,7 @@ export const races = pgTable("races", {
   startLon: doublePrecision("start_lon"),
   endLat: doublePrecision("end_lat"),
   endLon: doublePrecision("end_lon"),
+  gpx: jsonb("gpx").$type<Media>(),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });

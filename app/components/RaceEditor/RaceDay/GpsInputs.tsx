@@ -6,6 +6,10 @@ import type React from "react";
 
 import { useRaceStore } from "@/app/context/RaceStoreContext";
 
+import type {Media} from "@/app/lib/types";
+
+import MediaUpload from "@/app/components/MediaUpload/MediaUpload"
+
 interface GpsCoordinateCardProps {
   title: string;
   latValue: number | null | undefined;
@@ -78,6 +82,16 @@ export default function GpsInputs() {
         lonValue={race.endLon}
         onLatChange={(lat) => updateRaceField("endLat", lat)}
         onLonChange={(lon) => updateRaceField("endLon", lon)}
+      />
+      <MediaUpload
+        currentMedia={race.gpx}
+        onMediaChange={(media) => updateRaceField("gpx", media)}
+        bucket="gpx" 
+        folderId={race.id}
+        label="GPX Route File"
+        description="Upload a .gpx file to define the full race route."
+        accept="application/gpx+xml"
+        maxSize={5}
       />
     </Stack>
   );
