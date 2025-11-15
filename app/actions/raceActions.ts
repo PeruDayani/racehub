@@ -370,6 +370,7 @@ export async function updateRaceAction(
           website: race.website,
           socialMedia: race.socialMedia,
           waivers: race.waivers,
+          gpx: race.gpx,
           startLat: race.startLat,
           startLon: race.startLon,
           endLat: race.endLat,

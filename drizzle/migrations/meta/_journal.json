@@ -134,6 +134,13 @@
       "when": 1762485368449,
       "tag": "0018_old_flatman",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1763249612180,
+      "tag": "0019_right_johnny_storm",
+      "breakpoints": true
     }
   ]
 }

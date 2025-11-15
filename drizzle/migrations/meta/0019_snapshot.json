@@ -1,6 +1,6 @@
 {
-  "id": "02d78442-bc61-4598-a0ff-bc7443dd22d2",
-  "prevId": "d81dc532-25de-4a68-bb7b-d82c9ec349b7",
+  "id": "127405ad-3579-4a22-a0e7-1dd80594718d",
+  "prevId": "02d78442-bc61-4598-a0ff-bc7443dd22d2",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -590,6 +590,12 @@
         "end_lon": {
           "name": "end_lon",
           "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gpx": {
+          "name": "gpx",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },

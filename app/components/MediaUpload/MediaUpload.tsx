@@ -4,16 +4,24 @@ import { Anchor, Box, Button, Group, Image, Text } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { FileText, Image as ImageIcon, Upload, X } from "lucide-react";
 import { useState } from "react";
+import slugify from "slugify";
 import { deleteMedia, uploadMedia } from "@/app/lib/supabase/media";
 import type { Media, MediaBucket } from "@/app/lib/types";
 
+// create mime type for GPX files
+export const GPX_MIME_TYPE = ["application/gpx+xml"];
+
 // MIME type format for PDF files that Mantine Dropzone expects
 
-type ACCEPTED_MIME_TYPES = "image/*" | "application/pdf";
+type ACCEPTED_MIME_TYPES =
+  | "image/*"
+  | "application/pdf"
+  | "application/gpx+xml";
 
 const ACCEPT_MIME_TYPES: Record<ACCEPTED_MIME_TYPES, string[]> = {
   "image/*": IMAGE_MIME_TYPE,
   "application/pdf": PDF_MIME_TYPE,
+  "application/gpx+xml": GPX_MIME_TYPE,
 };
 
 interface MediaUploadProps {
@@ -42,7 +50,8 @@ export default function MediaUpload({
 
   const isImage = accept === "image/*";
   const isPdf = accept === "application/pdf";
-  const DropzoneIcon = isPdf ? FileText : ImageIcon;
+  const isGpx = accept === "application/gpx+xml";
+  const DropzoneIcon = isPdf || isGpx ? FileText : ImageIcon;
 
   const handleFileSelect = async (files: File[]) => {
     const file = files[0];
@@ -58,7 +67,12 @@ export default function MediaUpload({
     const isAccepted =
       accept === "image/*"
         ? file.type.startsWith("image/")
-        : file.type === "application/pdf";
+        : accept === "application/pdf"
+          ? file.type.startsWith("application/pdf")
+          : accept === "application/gpx+xml"
+            ? file.type === "application/gpx+xml" ||
+              file.name.toLowerCase().endsWith(".gpx")
+            : false;
 
     if (!isAccepted) {
       setError("Invalid file type");
@@ -69,7 +83,7 @@ export default function MediaUpload({
     setIsUploading(true);
 
     try {
-      const fileName = `${label.toLowerCase()}-${file.name}-${Date.now()}`;
+      const fileName = `${slugify(label, { lower: true })}-${Date.now()}-${file.name}`;
       const result = await uploadMedia({
         file,
         fileName,
@@ -144,7 +158,7 @@ export default function MediaUpload({
               Remove
             </Button>
           </Group>
-          {isPdf && (
+          {(isPdf || isGpx) && (
             <Box
               style={{
                 border: "1px solid var(--mantine-color-gray-3)",
@@ -158,7 +172,7 @@ export default function MediaUpload({
               <FileText size={48} color="var(--mantine-color-green-4)" />
               <Box style={{ flex: 1 }}>
                 <Text size="sm" fw={500}>
-                  PDF Document
+                  {isGpx ? "GPX File" : "PDF Document"}
                 </Text>
                 <Anchor
                   href={currentMedia.url}
@@ -166,7 +180,7 @@ export default function MediaUpload({
                   rel="noopener noreferrer"
                   size="sm"
                 >
-                  View PDF
+                  View File
                 </Anchor>
               </Box>
             </Box>
@@ -186,7 +200,7 @@ export default function MediaUpload({
               />
             </Box>
           )}
-          {!isPdf && !isImage && (
+          {!isPdf && !isImage && !isGpx && (
             <Box>
               <Text size="sm" c="dimmed">
                 Unsupported file type
