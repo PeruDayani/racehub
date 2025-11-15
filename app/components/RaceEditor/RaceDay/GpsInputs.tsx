@@ -2,13 +2,8 @@
 
 import { Card, NumberInput, Stack, Text } from "@mantine/core";
 
-import type React from "react";
-
+import MediaUpload from "@/app/components/MediaUpload/MediaUpload";
 import { useRaceStore } from "@/app/context/RaceStoreContext";
-
-import type {Media} from "@/app/lib/types";
-
-import MediaUpload from "@/app/components/MediaUpload/MediaUpload"
 
 interface GpsCoordinateCardProps {
   title: string;
@@ -38,7 +33,7 @@ function GpsCoordinateCard({
             label="Latitude"
             placeholder="e.g. 37.7749"
             value={latValue === null ? undefined : latValue}
-            onChange={(lat) => onLatChange(lat === "" ? null: Number(lat))}
+            onChange={(lat) => onLatChange(lat === "" ? null : Number(lat))}
             step={0.000001}
             min={-90}
             max={90}
@@ -50,7 +45,7 @@ function GpsCoordinateCard({
             label="Longitude"
             placeholder="e.g. -122.4194"
             value={lonValue === null ? undefined : lonValue}
-            onChange={(lon) => onLonChange(lon === "" ? null: Number(lon))}
+            onChange={(lon) => onLonChange(lon === "" ? null : Number(lon))}
             step={0.000001}
             min={-180}
             max={180}
@@ -65,7 +60,7 @@ function GpsCoordinateCard({
 
 export default function GpsInputs() {
   const race = useRaceStore((state) => state.race);
-  const updateRaceField = useRaceStore((state) => state.updateRaceField)
+  const updateRaceField = useRaceStore((state) => state.updateRaceField);
 
   return (
     <Stack gap="md">
@@ -86,7 +81,7 @@ export default function GpsInputs() {
       <MediaUpload
         currentMedia={race.gpx}
         onMediaChange={(media) => updateRaceField("gpx", media)}
-        bucket="gpx" 
+        bucket="gpx"
         folderId={race.id}
         label="GPX Route File"
         description="Upload a .gpx file to define the full race route."

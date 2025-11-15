@@ -4,6 +4,7 @@ import { Anchor, Box, Button, Group, Image, Text } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { FileText, Image as ImageIcon, Upload, X } from "lucide-react";
 import { useState } from "react";
+import slugify from "slugify";
 import { deleteMedia, uploadMedia } from "@/app/lib/supabase/media";
 import type { Media, MediaBucket } from "@/app/lib/types";
 
@@ -12,7 +13,10 @@ export const GPX_MIME_TYPE = ["application/gpx+xml"];
 
 // MIME type format for PDF files that Mantine Dropzone expects
 
-type ACCEPTED_MIME_TYPES = "image/*" | "application/pdf" | "application/gpx+xml";
+type ACCEPTED_MIME_TYPES =
+  | "image/*"
+  | "application/pdf"
+  | "application/gpx+xml";
 
 const ACCEPT_MIME_TYPES: Record<ACCEPTED_MIME_TYPES, string[]> = {
   "image/*": IMAGE_MIME_TYPE,
@@ -64,11 +68,11 @@ export default function MediaUpload({
       accept === "image/*"
         ? file.type.startsWith("image/")
         : accept === "application/pdf"
-        ? file.type.startsWith("application/pdf")
-        : accept === "application/gpx+xml"
-        ? file.type === "application/gpx+xml" ||
-          file.name.toLowerCase().endsWith(".gpx")
-        : false;
+          ? file.type.startsWith("application/pdf")
+          : accept === "application/gpx+xml"
+            ? file.type === "application/gpx+xml" ||
+              file.name.toLowerCase().endsWith(".gpx")
+            : false;
 
     if (!isAccepted) {
       setError("Invalid file type");
@@ -79,7 +83,7 @@ export default function MediaUpload({
     setIsUploading(true);
 
     try {
-      const fileName = `${label.toLowerCase()}-${file.name}-${Date.now()}`;
+      const fileName = `${slugify(label, { lower: true })}-${Date.now()}-${file.name}`;
       const result = await uploadMedia({
         file,
         fileName,
