@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, sum } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { tickets } from "../../drizzle/schema";
 import { db } from "../lib/db";
@@ -110,6 +110,30 @@ export async function createTicketAction(
 /**
  * Get user tickets action
  */
+
+// Example action to test the database
+export async function testGetAction(raceId: number): Promise<any> {
+  try {
+    const [result] = await db
+      .select({ 
+        count: count(),
+        totalAmountCents: sum(tickets.finalAmountCents),
+        totalAmountPaidCents: sum(tickets.amountPaidCents),
+      })
+      .from(tickets)
+      .where(eq(tickets.raceId, raceId));
+
+    return result;
+  } catch (error) {
+    console.error("Error getting test action:", error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to get test action",
+    };
+  }
+
+}
+
 
 type GetUserTicketsResponseType = {
   success: boolean;
