@@ -11,5 +11,5 @@ export default async function EditRaceDashboard({
 }: DashboardPageProps) {
   const { id } = await params;
   const raceId = Number.parseInt(id, 10);
-  return <DashboardEditor raceId = {raceId} />;
+  return <DashboardEditor raceId={raceId} />;
 }
