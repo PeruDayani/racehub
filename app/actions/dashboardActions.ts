@@ -4,7 +4,7 @@ import { count, eq } from "drizzle-orm";
 import { tickets } from "../../drizzle/schema";
 import { db } from "../lib/db";
 
-type GetRaceSignupStatsResponse = {
+export type GetRaceSignupStatsResponse = {
   success: boolean;
   message: string;
   data?: {

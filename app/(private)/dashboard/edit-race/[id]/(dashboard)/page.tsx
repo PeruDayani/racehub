@@ -1,4 +1,6 @@
+import { getRaceSignupStatsAction } from "@/app/actions/dashboardActions";
 import DashboardEditor from "@/app/components/RaceEditor/Dashboard/DashboardEditor";
+import { Card, Stack, Text, Title } from "@mantine/core";
 
 type DashboardPageProps = {
   params: Promise<{
@@ -11,5 +13,21 @@ export default async function EditRaceDashboard({
 }: DashboardPageProps) {
   const { id } = await params;
   const raceId = Number.parseInt(id, 10);
-  return <DashboardEditor raceId={raceId} />;
+  const response = await getRaceSignupStatsAction(raceId);
+
+  if (!response.success || !response.data) {
+    return (
+      <Card withBorder radius="md" maw={640} mx="auto" mt="xl">
+        <Stack gap="xs">
+          <Title order={3}>Race Overview</Title>
+          <Text c="dimmed">
+            We couldn't load your latest signup stats. Please refresh the page
+            or try again later.
+          </Text>
+        </Stack>
+      </Card>
+    );
+  }
+
+  return <DashboardEditor raceId={raceId} stats={response.data} />;
 }

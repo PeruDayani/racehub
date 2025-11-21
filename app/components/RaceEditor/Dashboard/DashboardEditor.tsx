@@ -1,31 +1,17 @@
-"use server";
+"use client";
 
 import { Card, Flex, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { getRaceSignupStatsAction } from "@/app/actions/dashboardActions";
+import { GetRaceSignupStatsResponse } from "@/app/actions/dashboardActions";
 
 type DashboardEditorProps = {
   raceId: number;
+  stats: GetRaceSignupStatsResponse["data"] ;
 };
 
-export default async function DashboardEditor({
+export default function DashboardEditor({
   raceId,
+  stats,
 }: DashboardEditorProps) {
-  const stats = await getRaceSignupStatsAction(raceId);
-  const registrantCount = stats.data?.registrantCount ?? 0;
-
-  if (!stats.success || !stats.data) {
-    return (
-      <Card withBorder radius="md" maw={640} mx="auto" mt="xl">
-        <Stack gap="xs">
-          <Title order={3}>Race Overview</Title>
-          <Text c="dimmed">
-            We couldn't load your latest signup stats. Please refresh the page
-            or try again later.
-          </Text>
-        </Stack>
-      </Card>
-    );
-  }
 
   return (
     <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg" mt="xl">
@@ -37,7 +23,7 @@ export default async function DashboardEditor({
               Total Registrants
             </Text>
             <Title order={2} fw={800}>
-              {registrantCount.toLocaleString()}
+              {stats?.registrantCount?.toLocaleString()}
             </Title>
           </Stack>
         </Flex>
