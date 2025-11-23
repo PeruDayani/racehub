@@ -43,9 +43,7 @@ export async function getRaceSignupStatsAction(
       .where(
         and(
           eq(tickets.raceId, raceId),
-          or(
-            eq(tickets.stripePaymentIntentStatus, "paid"),
-          ),
+          or(eq(tickets.stripePaymentIntentStatus, "paid")),
         ),
       );
 

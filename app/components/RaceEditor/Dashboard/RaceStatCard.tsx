@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Flex, Stack, Text, Title, Box } from "@mantine/core";
+import { Box, Card, Flex, Stack, Text, Title } from "@mantine/core";
 import type { LucideIcon } from "lucide-react";
 
 type RaceStatCardProps = {
@@ -26,7 +26,9 @@ export default function RaceStatCard({
   iconSize = 32,
 }: RaceStatCardProps) {
   // Format value based on type
-  const formatValue = (val: string | number | React.ReactNode): React.ReactNode => {
+  const formatValue = (
+    val: string | number | React.ReactNode,
+  ): React.ReactNode => {
     if (typeof val === "number") {
       return val.toLocaleString();
     }
@@ -34,7 +36,13 @@ export default function RaceStatCard({
   };
 
   return (
-    <Card withBorder radius="md" padding="lg" shadow="sm" style={{ height: "100%" }}>
+    <Card
+      withBorder
+      radius="md"
+      padding="lg"
+      shadow="sm"
+      style={{ height: "100%" }}
+    >
       <Flex align="flex-start" gap="md">
         {/* Icon */}
         <Box
@@ -79,4 +87,3 @@ export function formatCurrency(cents: number): string {
 export function formatPercentage(value: number, decimals = 1): string {
   return `${value.toFixed(decimals)}%`;
 }
-

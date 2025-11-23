@@ -1,11 +1,19 @@
 "use client";
 
-import { SimpleGrid, Stack, Title, Text, Group } from "@mantine/core";
-import { GetRaceSignupStatsResponse } from "@/app/actions/dashboardActions";
-import RaceStatCard, { formatCurrency } from "./RaceStatCard";
-import { Users, DollarSign, CreditCard, TrendingUp, Calendar, Clock, MapPin } from "lucide-react";
+import { Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import {
+  Calendar,
+  Clock,
+  CreditCard,
+  DollarSign,
+  MapPin,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import type { GetRaceSignupStatsResponse } from "@/app/actions/dashboardActions";
 import { useRaceStore } from "@/app/context/RaceStoreContext";
 import type { RaceOption } from "@/app/lib/types";
+import RaceStatCard, { formatCurrency } from "./RaceStatCard";
 
 type DashboardEditorProps = {
   raceId: number;
@@ -18,14 +26,13 @@ export default function DashboardEditor({
 }: DashboardEditorProps) {
   const race = useRaceStore((state) => state.race);
   const raceName = race?.name || "Race Dashboard";
-  
+
   const registrantCount = stats?.registrantCount ?? 0;
   const totalRevenueCents = stats?.totalRevenueCents ?? 0;
 
   // Calculate payment rate as percentage of registrants who have paid
-  const paymentRate = registrantCount > 0 
-    ? ((stats?.paidCount ?? 0) / registrantCount) * 100 
-    : 0;
+  const paymentRate =
+    registrantCount > 0 ? ((stats?.paidCount ?? 0) / registrantCount) * 100 : 0;
 
   // Format race date
   const formatDate = (date: string | null | undefined) => {
@@ -53,12 +60,17 @@ export default function DashboardEditor({
     if (!race?.options || race.options.length === 0) return null;
     const timesWithOptions = race.options
       .filter((opt: RaceOption) => opt.startTime != null)
-      .map((opt: RaceOption) => ({ time: opt.startTime as string, option: opt }))
-      .sort((a: { time: string }, b: { time: string }) => a.time.localeCompare(b.time));
+      .map((opt: RaceOption) => ({
+        time: opt.startTime as string,
+        option: opt,
+      }))
+      .sort((a: { time: string }, b: { time: string }) =>
+        a.time.localeCompare(b.time),
+      );
     return timesWithOptions.length > 0 ? timesWithOptions[0].time : null;
   };
 
-  const location = race?.address 
+  const location = race?.address
     ? `${race.address.city}, ${race.address.state}`
     : "TBD";
 
@@ -66,7 +78,7 @@ export default function DashboardEditor({
     <Stack gap="lg" mt="xl">
       <Stack gap={4}>
         <Title order={2}>{raceName}</Title>
-        
+
         {/* Race metadata */}
         <Group gap="xl" mt={4}>
           <Group gap={6}>
@@ -75,14 +87,14 @@ export default function DashboardEditor({
               {formatDate(race?.date)}
             </Text>
           </Group>
-          
+
           <Group gap={6}>
             <Clock size={16} color="var(--mantine-color-dimmed)" />
             <Text size="sm" c="dimmed">
               {formatTime(getStartTime())}
             </Text>
           </Group>
-          
+
           <Group gap={6}>
             <MapPin size={16} color="var(--mantine-color-dimmed)" />
             <Text size="sm" c="dimmed">
@@ -90,7 +102,7 @@ export default function DashboardEditor({
             </Text>
           </Group>
         </Group>
-        
+
         <Text c="dimmed" size="sm" mt="xs">
           Overview of your race statistics and performance metrics
         </Text>
