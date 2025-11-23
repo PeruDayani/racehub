@@ -26,7 +26,7 @@ export default async function EditRaceDashboard({
           </Text>
         </Stack>
       </Card>
-    )
+    );
   }
 
   return <DashboardEditor raceId={raceId} stats={response.data} />;
