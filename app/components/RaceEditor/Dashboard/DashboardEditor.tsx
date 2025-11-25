@@ -1,18 +1,17 @@
 "use client";
 
 import { Card, Flex, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { GetRaceSignupStatsResponse } from "@/app/actions/dashboardActions";
+import type { GetRaceSignupStatsResponse } from "@/app/actions/dashboardActions";
 
 type DashboardEditorProps = {
   raceId: number;
-  stats: GetRaceSignupStatsResponse["data"] ;
+  stats: GetRaceSignupStatsResponse["data"];
 };
 
 export default function DashboardEditor({
   raceId,
   stats,
 }: DashboardEditorProps) {
-
   return (
     <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg" mt="xl">
       <Card withBorder radius="md" padding="lg" shadow="sm">
