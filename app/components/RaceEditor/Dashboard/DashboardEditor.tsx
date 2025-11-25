@@ -10,50 +10,29 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import type { GetRaceSignupStatsResponse } from "@/app/actions/dashboardActions";
+import type { RaceSignupStats } from "@/app/actions/dashboardActions";
 import { useRaceStore } from "@/app/context/RaceStoreContext";
 import type { RaceOption } from "@/app/lib/types";
-import RaceStatCard, { formatCurrency } from "./RaceStatCard";
+import {
+  calculatePaymentRate,
+  formatCurrency,
+  formatDate,
+  formatPercentage,
+  formatRaceAddress,
+  formatTime,
+} from "@/app/lib/utils";
+import RaceStatCard from "./RaceStatCard";
 
 type DashboardEditorProps = {
-  raceId: number;
-  stats: GetRaceSignupStatsResponse["data"];
+  stats: RaceSignupStats;
 };
 
-export default function DashboardEditor({
-  raceId,
-  stats,
-}: DashboardEditorProps) {
+export default function DashboardEditor({ stats }: DashboardEditorProps) {
   const race = useRaceStore((state) => state.race);
   const raceName = race?.name || "Race Dashboard";
-
-  const registrantCount = stats?.registrantCount ?? 0;
-  const totalRevenueCents = stats?.totalRevenueCents ?? 0;
-
-  // Calculate payment rate as percentage of registrants who have paid
-  const paymentRate =
-    registrantCount > 0 ? ((stats?.paidCount ?? 0) / registrantCount) * 100 : 0;
-
-  // Format race date
-  const formatDate = (date: string | null | undefined) => {
-    if (!date) return "TBD";
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  // Format time from time string (HH:MM:SS format)
-  const formatTime = (time: string | null | undefined) => {
-    if (!time) return "TBD";
-    // Parse time string (e.g., "09:30:00") and format it
-    const [hours, minutes] = time.split(":");
-    const hour = parseInt(hours, 10);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
+  const { registrantCount, totalRevenueCents, paidCount } = stats;
+  const paymentRate = calculatePaymentRate(registrantCount, paidCount);
+  const location = formatRaceAddress(race?.address);
 
   // Get the earliest start time from race options, or first one available
   const getStartTime = () => {
@@ -69,10 +48,6 @@ export default function DashboardEditor({
       );
     return timesWithOptions.length > 0 ? timesWithOptions[0].time : null;
   };
-
-  const location = race?.address
-    ? `${race.address.city}, ${race.address.state}`
-    : "TBD";
 
   return (
     <Stack gap="lg" mt="xl">
@@ -136,7 +111,7 @@ export default function DashboardEditor({
         <RaceStatCard
           icon={TrendingUp}
           label="Payment Rate"
-          value={`${paymentRate.toFixed(1)}%`}
+          value={formatPercentage(paymentRate)}
           description="Percentage of registrants who have paid"
           iconColor="var(--mantine-color-orange-6)"
         />

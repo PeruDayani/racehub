@@ -1,17 +1,19 @@
 "use server";
 
-import { and, count, eq, or, sum } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { tickets } from "../../drizzle/schema";
 import { db } from "../lib/db";
+
+export type RaceSignupStats = {
+  registrantCount: number;
+  totalRevenueCents: number;
+  paidCount: number;
+};
 
 export type GetRaceSignupStatsResponse = {
   success: boolean;
   message: string;
-  data?: {
-    registrantCount: number;
-    totalRevenueCents: number;
-    paidCount: number;
-  };
+  data?: RaceSignupStats;
 };
 
 export async function getRaceSignupStatsAction(
@@ -25,17 +27,17 @@ export async function getRaceSignupStatsAction(
       };
     }
 
-    const [result] = await db
+    const [{ registrantCount, totalRevenueCents }] = await db
       .select({
         registrantCount: count(),
-        totalRevenueCents: sum(tickets.amountPaidCents),
+        totalRevenueCents: sql<number>`sum(${tickets.amountPaidCents})`,
       })
       .from(tickets)
       .where(eq(tickets.raceId, raceId));
 
     // Count paid tickets (tickets with successful payment status)
     // In Stripe, "paid" is the payment_status value for successful payments
-    const [paidResult] = await db
+    const [{ paidCount }] = await db
       .select({
         paidCount: count(),
       })
@@ -43,22 +45,17 @@ export async function getRaceSignupStatsAction(
       .where(
         and(
           eq(tickets.raceId, raceId),
-          or(eq(tickets.stripePaymentIntentStatus, "paid")),
+          eq(tickets.stripePaymentIntentStatus, "paid"),
         ),
       );
-
-    // Convert sum result to number (sum can return string, number, or null)
-    const totalRevenueCents = result?.totalRevenueCents
-      ? Number(result.totalRevenueCents) || 0
-      : 0;
 
     return {
       success: true,
       message: "Race signup stats retrieved.",
       data: {
-        registrantCount: result?.registrantCount ?? 0,
-        totalRevenueCents,
-        paidCount: paidResult?.paidCount ?? 0,
+        registrantCount: registrantCount ?? 0,
+        totalRevenueCents: totalRevenueCents ?? 0,
+        paidCount: paidCount ?? 0,
       },
     };
   } catch (error) {

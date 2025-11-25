@@ -12,11 +12,6 @@ type RaceStatCardProps = {
   iconSize?: number;
 };
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
-
 export default function RaceStatCard({
   icon: Icon,
   label,
@@ -76,14 +71,4 @@ export default function RaceStatCard({
       </Flex>
     </Card>
   );
-}
-
-// Helper function to format currency values (cents to dollars)
-export function formatCurrency(cents: number): string {
-  return currencyFormatter.format(cents / 100);
-}
-
-// Helper function to format percentage values
-export function formatPercentage(value: number, decimals = 1): string {
-  return `${value.toFixed(decimals)}%`;
 }

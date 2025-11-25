@@ -29,5 +29,5 @@ export default async function EditRaceDashboard({
     );
   }
 
-  return <DashboardEditor raceId={raceId} stats={response.data} />;
+  return <DashboardEditor stats={response.data} />;
 }
