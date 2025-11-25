@@ -35,8 +35,6 @@ export async function getRaceSignupStatsAction(
       .from(tickets)
       .where(eq(tickets.raceId, raceId));
 
-    // Count paid tickets (tickets with successful payment status)
-    // In Stripe, "paid" is the payment_status value for successful payments
     const [{ paidCount }] = await db
       .select({
         paidCount: count(),
