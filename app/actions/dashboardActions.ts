@@ -1,15 +1,19 @@
 "use server";
 
-import { count, eq } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { tickets } from "../../drizzle/schema";
 import { db } from "../lib/db";
+
+export type RaceSignupStats = {
+  registrantCount: number;
+  totalRevenueCents: number;
+  paidCount: number;
+};
 
 export type GetRaceSignupStatsResponse = {
   success: boolean;
   message: string;
-  data?: {
-    registrantCount: number;
-  };
+  data?: RaceSignupStats;
 };
 
 export async function getRaceSignupStatsAction(
@@ -23,18 +27,33 @@ export async function getRaceSignupStatsAction(
       };
     }
 
-    const [result] = await db
+    const [{ registrantCount, totalRevenueCents }] = await db
       .select({
         registrantCount: count(),
+        totalRevenueCents: sql<number>`sum(${tickets.amountPaidCents})`,
       })
       .from(tickets)
       .where(eq(tickets.raceId, raceId));
+
+    const [{ paidCount }] = await db
+      .select({
+        paidCount: count(),
+      })
+      .from(tickets)
+      .where(
+        and(
+          eq(tickets.raceId, raceId),
+          eq(tickets.stripePaymentIntentStatus, "paid"),
+        ),
+      );
 
     return {
       success: true,
       message: "Race signup stats retrieved.",
       data: {
-        registrantCount: result?.registrantCount ?? 0,
+        registrantCount: registrantCount ?? 0,
+        totalRevenueCents: totalRevenueCents ?? 0,
+        paidCount: paidCount ?? 0,
       },
     };
   } catch (error) {
