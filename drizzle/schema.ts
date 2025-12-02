@@ -41,6 +41,7 @@ export const profiles = pgTable("profiles", {
   emergencyContactName: text("emergency_contact_name"),
   emergencyContactPhone: text("emergency_contact_phone"),
   emergencyContactEmail: text("emergency_contact_email"),
+  mobileApp: boolean("mobile_app").default(false),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 });

@@ -141,6 +141,13 @@
       "when": 1763249612180,
       "tag": "0019_right_johnny_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1764643762937,
+      "tag": "0020_lucky_ogun",
+      "breakpoints": true
     }
   ]
 }
