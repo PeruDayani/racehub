@@ -1,0 +1,1 @@
+ALTER TABLE "route_points" ADD COLUMN "route_id" text NOT NULL;
