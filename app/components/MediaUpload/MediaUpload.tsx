@@ -1,8 +1,8 @@
 "use client";
 
-import { Box, Button, Group, Image, Text } from "@mantine/core";
+import { Anchor, Box, Button, Group, Image, Text } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
-import { Anchor, FileText, Image as ImageIcon, Upload, X } from "lucide-react";
+import { FileText, Image as ImageIcon, Upload, X } from "lucide-react";
 import { useState } from "react";
 import slugify from "slugify";
 import { deleteMedia, uploadMedia } from "@/app/lib/supabase/media";
@@ -83,9 +83,7 @@ export default function MediaUpload({
     setIsUploading(true);
 
     try {
-      const fileName = `${slugify(label, { lower: true })}-${Date.now()}-${
-        file.name
-      }`;
+      const fileName = `${slugify(label, { lower: true })}-${Date.now()}-${file.name}`;
       const result = await uploadMedia({
         file,
         fileName,
@@ -176,7 +174,12 @@ export default function MediaUpload({
                 <Text size="sm" fw={500}>
                   {isGpx ? "GPX File" : "PDF Document"}
                 </Text>
-                <Anchor href={currentMedia.url} target="_blank" size="sm">
+                <Anchor
+                  href={currentMedia.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  size="sm"
+                >
                   View File
                 </Anchor>
               </Box>
