@@ -11,8 +11,8 @@ import {
 } from "../../drizzle/schema";
 import { db, type TransactionClient } from "../lib/db";
 import type { Race, RaceOption, RaceOptionPrice } from "../lib/types";
-import { getAuthenticatedUser } from "./utils";
 import { parseGpxAndLoadRoute } from "./parseGpx";
+import { getAuthenticatedUser } from "./utils";
 
 /**
  * Live races actions that do not require authentication
@@ -355,9 +355,7 @@ export async function updateRaceAction(
       }
 
       // 🔹 Determine if GPX changed
-      shouldParseGpx =
-        !!race.gpx &&
-        race.gpx?.path !== existingRace.gpx?.path;
+      shouldParseGpx = !!race.gpx && race.gpx?.path !== existingRace.gpx?.path;
 
       // Update the Race Address
       const addressId = await upsertAddress(
