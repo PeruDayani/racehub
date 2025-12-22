@@ -161,4 +161,7 @@ Overview
 - Test using curl commands that are autogenerate in the files.
 
 #### Prod Deployment
-- TODO: https://supabase.com/docs/guides/functions/quickstart#step-5-connect-to-your-supabase-project
+- Follow the steps to connect to the supabase project: https://supabase.com/docs/guides/functions/quickstart#step-5-connect-to-your-supabase-project
+- Deploy specific function `supabase functions deploy hello-world`
+- Deploy all functions `supabase functions deploy`
+- TOOD: We should deploy all functions as a CLI step
