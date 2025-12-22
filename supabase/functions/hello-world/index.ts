@@ -1,6 +1,6 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "@supabase/supabase-js";
+import { getSupabaseClient } from "../_shared/supabase.ts";
 
 const FUNCTION_NAME = "hello-world";
 
@@ -14,13 +14,7 @@ interface HelloWorldResponse {
 
 Deno.serve(async (req: Request): Promise<Response> => {
   try {
-    // TODO: move to shared function
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error("Missing Supabase environment variables");
-    }
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = getSupabaseClient();
 
     // Get function parameters
     const { raceId } = (await req.json()) as HelloWorldParams;
