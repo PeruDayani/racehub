@@ -148,4 +148,17 @@ Overview
 
 
 ### Edge Functions
-- Deploy to prod: https://supabase.com/docs/guides/functions/quickstart#step-5-connect-to-your-supabase-project
+
+#### Overview
+- Code lives in `supabase/functions`
+- Each function is a stanadalone package deployed to Supabase.
+- Each function will have code in `index.ts` and dependencies in `deno.json`
+
+#### Dev
+- Create a new function using `supabase functions new NAME-OF-FUNCTION`
+- Code in `index.ts` and dependencies in `deno.json`, we should stick to a basic format
+- Run the function locally `supabase functions serve NAME-OF-FUNCTION`
+- Test using curl commands that are autogenerate in the files.
+
+#### Prod Deployment
+- TODO: https://supabase.com/docs/guides/functions/quickstart#step-5-connect-to-your-supabase-project
