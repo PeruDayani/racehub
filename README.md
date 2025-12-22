@@ -145,3 +145,7 @@ Overview
 - Disabling the webhook seemed to have worked. But that'll be a headache.
 - Having both the webhook and local listener results in both getting called, which will mess up the prod DB during local dev.
 - Probably two sandboxes is the way to go. Dev and Stg.
+
+
+### Edge Functions
+- Deploy to prod: https://supabase.com/docs/guides/functions/quickstart#step-5-connect-to-your-supabase-project
