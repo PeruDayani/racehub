@@ -1,7 +1,6 @@
 import "dotenv/config";
 import { randomUUID } from "node:crypto";
 import { eq, inArray } from "drizzle-orm";
-import { authUsers } from "drizzle-orm/supabase";
 import { db } from "../app/lib/db";
 import {
   profiles,
@@ -42,7 +41,7 @@ async function seedTickets() {
 
   try {
     // Get all users
-    let users = await db.select({ id: profiles.id }).from(profiles);
+    const users = await db.select({ id: profiles.id }).from(profiles);
 
     if (users.length === 0) {
       console.error("❌ No users found in database.");

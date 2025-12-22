@@ -2,17 +2,9 @@
 
 import { Box, Button, Group, Image, Text } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
-import {
-  ExternalLink,
-  FileText,
-  Image as ImageIcon,
-  Upload,
-  X,
-} from "lucide-react";
+import { Anchor, FileText, Image as ImageIcon, Upload, X } from "lucide-react";
 import { useState } from "react";
 import slugify from "slugify";
-import GPXPreview from "@/app/components/MediaUpload/GPXPreview";
-import PDFPreview from "@/app/components/MediaUpload/PDFPreview";
 import { deleteMedia, uploadMedia } from "@/app/lib/supabase/media";
 import type { Media, MediaBucket } from "@/app/lib/types";
 
@@ -156,29 +148,40 @@ export default function MediaUpload({
             <Text size="sm" c="dimmed">
               Current {label.toLowerCase()}:
             </Text>
-            <Group gap="xs">
-              <Button
-                size="xs"
-                color="blue"
-                leftSection={<ExternalLink size={14} />}
-                onClick={() => window.open(currentMedia.url, "_blank")}
-              >
-                Open in new tab
-              </Button>
-              <Button
-                size="xs"
-                color="red"
-                leftSection={<X size={14} />}
-                onClick={handleDelete}
-                loading={isUploading}
-                disabled={isUploading}
-              >
-                Remove
-              </Button>
-            </Group>
+            <Button
+              size="xs"
+              variant="subtle"
+              color="red"
+              leftSection={<X size={14} />}
+              onClick={handleDelete}
+              loading={isUploading}
+              disabled={isUploading}
+            >
+              Remove
+            </Button>
           </Group>
-          {isPdf && <PDFPreview media={currentMedia} />}
-          {isGpx && <GPXPreview media={currentMedia} />}
+          {(isPdf || isGpx) && (
+            <Box
+              style={{
+                border: "1px solid var(--mantine-color-gray-3)",
+                borderRadius: "var(--mantine-radius-md)",
+                padding: "var(--mantine-spacing-md)",
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--mantine-spacing-sm)",
+              }}
+            >
+              <FileText size={48} color="var(--mantine-color-green-4)" />
+              <Box style={{ flex: 1 }}>
+                <Text size="sm" fw={500}>
+                  {isGpx ? "GPX File" : "PDF Document"}
+                </Text>
+                <Anchor href={currentMedia.url} target="_blank" size="sm">
+                  View File
+                </Anchor>
+              </Box>
+            </Box>
+          )}
           {isImage && (
             <Box
               style={{
