@@ -153,6 +153,7 @@ Overview
 - Code lives in `supabase/functions`
 - Each function is a stanadalone package deployed to Supabase.
 - Each function will have code in `index.ts` and dependencies in `deno.json`
+- Note: Keep console logs to an absoulete minimum, we want these functions to be very light
 
 #### Dev
 - Create a new function using `supabase functions new NAME-OF-FUNCTION`
