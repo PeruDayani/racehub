@@ -1,17 +1,62 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "@supabase/supabase-js";
 
-console.log("Hello from Functions!");
+const FUNCTION_NAME = "hello-world";
 
-Deno.serve(async (req) => {
-  const { name } = await req.json();
-  const data = {
-    message: `Hello ${name}!`,
-  };
+interface HelloWorldParams {
+  raceId: string;
+}
 
-  return new Response(JSON.stringify(data), {
-    headers: { "Content-Type": "application/json" },
-  });
+interface HelloWorldResponse {
+  message: string;
+}
+
+Deno.serve(async (req: Request): Promise<Response> => {
+  try {
+    // TODO: move to shared function
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error("Missing Supabase environment variables");
+    }
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Get function parameters
+    const { raceId } = (await req.json()) as HelloWorldParams;
+    console.log(
+      `[${FUNCTION_NAME}] params:`,
+      JSON.stringify({ raceId }, null, 2),
+    );
+
+    // Perform the function logic
+    const { data, error } = await supabase
+      .from("races")
+      .select("*")
+      .eq("id", raceId);
+    if (error) {
+      throw new Error(`Error fetching race: ${error.message}`);
+    }
+    console.log(`[${FUNCTION_NAME}] race:`, JSON.stringify(data, null, 2));
+
+    // Return the function response
+    const response: HelloWorldResponse = {
+      message: `Hello ${data[0].name}!`,
+    };
+
+    console.log(
+      `[${FUNCTION_NAME}] response:`,
+      JSON.stringify(response, null, 2),
+    );
+    return new Response(JSON.stringify(response), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    console.error(`${FUNCTION_NAME} error:`, err);
+    return new Response(String(err instanceof Error ? err.message : err), {
+      status: 500,
+    });
+  }
 });
 
 /* To invoke locally:
@@ -22,6 +67,6 @@ Deno.serve(async (req) => {
   curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/hello-world' \
     --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
     --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
+    --data '{"raceId":"12"}'
 
 */

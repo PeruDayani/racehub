@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "biome check --write --unsafe",
+    "lint": "biome check --write --unsafe --diagnostic-level=error",
     "db:check": "npx drizzle-kit check",
     "db:local:push": "npx drizzle-kit push",
     "db:local:migrate": "npx drizzle-kit migrate",
