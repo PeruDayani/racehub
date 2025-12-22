@@ -1,21 +1,13 @@
 import { Box, Group, Paper, SimpleGrid, Text, ThemeIcon } from "@mantine/core";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import type { Race } from "@/app/lib/types";
+import { formatDate, formatRaceAddress } from "@/app/lib/utils";
 
 interface RaceDetailsGridProps {
   race: Race;
 }
 
 export default function RaceDetailsGrid({ race }: RaceDetailsGridProps) {
-  const formatDate = (date: string | null) => {
-    if (!date) return "TBD";
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
     <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg" mb="xl">
       {/* Race Date Card */}
@@ -46,13 +38,7 @@ export default function RaceDetailsGrid({ race }: RaceDetailsGridProps) {
               Location
             </Text>
             <Text fw={600} size="md">
-              {race.address ? (
-                <>
-                  {race.address.city}, {race.address.state}
-                </>
-              ) : (
-                "TBD"
-              )}
+              {formatRaceAddress(race.address)}
             </Text>
           </Box>
         </Group>
