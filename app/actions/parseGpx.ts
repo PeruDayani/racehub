@@ -9,7 +9,7 @@ export async function parseGpxAndLoadRoute(raceId: number) {
   // 1️⃣ Get GPX path
   const { data: race, error: raceError } = await supabase
     .from("races")
-    .select("gpx")
+    .select("gpx, name")
     .eq("id", raceId)
     .single();
 
@@ -46,9 +46,6 @@ export async function parseGpxAndLoadRoute(raceId: number) {
 
   const gpxJson = parser.parse(gpxText);
 
-  // Extract route name
-  const routeName = gpxJson.gpx?.trk?.name ?? "Unnamed Route";
-
   //extract track points
   let trkpts = gpxJson.gpx?.trk?.trkseg?.trkpt;
   if (!trkpts) {
@@ -62,7 +59,6 @@ export async function parseGpxAndLoadRoute(raceId: number) {
   // 4️⃣ Map points for insertion
   const rows = trkpts.map((pt: any, idx: number) => ({
     route_id: routeId, // Use snake_case and integer type
-    route_name: routeName,
     lat: parseFloat(pt.lat),
     lon: parseFloat(pt.lon),
     point_index: idx + 1,
