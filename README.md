@@ -145,3 +145,24 @@ Overview
 - Disabling the webhook seemed to have worked. But that'll be a headache.
 - Having both the webhook and local listener results in both getting called, which will mess up the prod DB during local dev.
 - Probably two sandboxes is the way to go. Dev and Stg.
+
+
+### Edge Functions
+
+#### Overview
+- Code lives in `supabase/functions`
+- Each function is a stanadalone package deployed to Supabase.
+- Each function will have code in `index.ts` and dependencies in `deno.json`
+- Note: Keep console logs to an absoulete minimum, we want these functions to be very light
+
+#### Dev
+- Create a new function using `supabase functions new NAME-OF-FUNCTION`
+- Code in `index.ts` and dependencies in `deno.json`, we should stick to a basic format
+- Run the function locally `supabase functions serve NAME-OF-FUNCTION`
+- Test using curl commands that are autogenerate in the files.
+
+#### Prod Deployment
+- Follow the steps to connect to the supabase project: https://supabase.com/docs/guides/functions/quickstart#step-5-connect-to-your-supabase-project
+- Deploy specific function `supabase functions deploy hello-world`
+- Deploy all functions `supabase functions deploy`
+- TOOD: We should deploy all functions as a CLI step
