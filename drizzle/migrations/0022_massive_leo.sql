@@ -1,0 +1,1 @@
+ALTER TABLE "route_points" RENAME COLUMN "route_id" TO "race_id";
