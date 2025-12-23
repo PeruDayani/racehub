@@ -1,10 +1,10 @@
 "use server";
 
-import { XMLParser } from "fast-xml-parser";
 import { eq } from "drizzle-orm";
+import { XMLParser } from "fast-xml-parser";
 import { createClient } from "@/app/lib/supabase/client";
-import { db } from "../lib/db";
 import { races, routePoints } from "../../drizzle/schema";
+import { db } from "../lib/db";
 
 export async function parseGpxAndLoadRoute(raceId: number) {
   const supabase = createClient();
@@ -71,12 +71,8 @@ export async function parseGpxAndLoadRoute(raceId: number) {
   }));
 
   // 6️⃣ Delete existing route points (Drizzle)
-  await db
-    .delete(routePoints)
-    .where(eq(routePoints.raceId, raceIdVal));
+  await db.delete(routePoints).where(eq(routePoints.raceId, raceIdVal));
 
   // 7️⃣ Insert new route points (Drizzle)
-  await db
-    .insert(routePoints)
-    .values(rows);
+  await db.insert(routePoints).values(rows);
 }
