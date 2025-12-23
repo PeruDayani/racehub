@@ -189,7 +189,7 @@ export const runLocations = pgTable("run_locations", {
 
 export const routePoints = pgTable("route_points", {
   id: serial("id").primaryKey().notNull(),
-  routeId: integer("route_id").notNull(),
+  raceId: integer("race_id").notNull(),
   lat: doublePrecision("lat").notNull(),
   lon: doublePrecision("lon").notNull(),
   pointIndex: integer("point_index").notNull(),

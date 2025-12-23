@@ -1,20 +1,25 @@
 "use server";
 
 import { XMLParser } from "fast-xml-parser";
+import { eq } from "drizzle-orm";
 import { createClient } from "@/app/lib/supabase/client";
+import { db } from "../lib/db";
+import { races, routePoints } from "../../drizzle/schema";
 
 export async function parseGpxAndLoadRoute(raceId: number) {
   const supabase = createClient();
 
   // 1️⃣ Get GPX path
-  const { data: race, error: raceError } = await supabase
-    .from("races")
-    .select("gpx, name")
-    .eq("id", raceId)
-    .single();
+  const race = await db.query.races.findFirst({
+    where: eq(races.id, raceId),
+    columns: {
+      gpx: true,
+      name: true,
+    },
+  });
 
-  if (raceError || !race) {
-    console.error("[parseGpx] race fetch error", raceError);
+  if (!race) {
+    console.error("[parseGpx] race not found for id:", raceId);
     throw new Error("Race not found");
   }
 
@@ -22,11 +27,12 @@ export async function parseGpxAndLoadRoute(raceId: number) {
   const gpxPath = race.gpx?.path;
   if (!gpxPath) throw new Error("GPX path missing in race record");
 
-  // Extract route_id from the beginning of the path (e.g., "13/gpxfile.gpx" -> 13)
-  const routeIdStr = gpxPath.split("/")[0];
-  if (!routeIdStr) throw new Error("Invalid GPX path format");
-  const routeId = parseInt(routeIdStr, 10);
-  if (Number.isNaN(routeId)) throw new Error("Route ID is not a valid number");
+  // Extract route_id from path (e.g. "13/gpxfile.gpx")
+  const raceIdStr = gpxPath.split("/")[0];
+  const raceIdVal = Number(raceIdStr);
+  if (!raceIdVal || Number.isNaN(raceIdVal)) {
+    throw new Error("Race ID is not a valid number");
+  }
 
   //download gpx file from storage
   const { data: file, error: downloadError } = await supabase.storage
@@ -56,26 +62,21 @@ export async function parseGpxAndLoadRoute(raceId: number) {
   // Ensure array
   if (!Array.isArray(trkpts)) trkpts = [trkpts];
 
-  // 4️⃣ Map points for insertion
+  // 4️⃣ Map points for insertion (use camelCase to match Drizzle schema)
   const rows = trkpts.map((pt: any, idx: number) => ({
-    route_id: routeId, // Use snake_case and integer type
+    raceId: raceIdVal,
     lat: parseFloat(pt.lat),
     lon: parseFloat(pt.lon),
-    point_index: idx + 1,
+    pointIndex: idx + 1,
   }));
 
-  await supabase
-    .from("route_points")
-    .delete()
-    .eq("route_id", routeId.toString());
+  // 6️⃣ Delete existing route points (Drizzle)
+  await db
+    .delete(routePoints)
+    .where(eq(routePoints.raceId, raceIdVal));
 
-  // 5️⃣ Insert points into route_points table
-  const { error: insertError } = await supabase
-    .from("route_points")
-    .insert(rows);
-
-  if (insertError) {
-    console.error("[parseGpx] insert error:", insertError);
-    throw new Error("Failed to insert route points");
-  }
+  // 7️⃣ Insert new route points (Drizzle)
+  await db
+    .insert(routePoints)
+    .values(rows);
 }
