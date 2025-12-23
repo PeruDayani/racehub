@@ -11,6 +11,7 @@ import {
 } from "../../drizzle/schema";
 import { db, type TransactionClient } from "../lib/db";
 import type { Race, RaceOption, RaceOptionPrice } from "../lib/types";
+import { parseGpxAndLoadRoute } from "./parseGpx";
 import { getAuthenticatedUser } from "./utils";
 
 /**
@@ -340,6 +341,7 @@ export async function updateRaceAction(
     if (!user) return { success: false, message: "User not authenticated" };
 
     let updatedRace: Race | undefined;
+    let shouldParseGpx = false;
     await db.transaction(async (tx) => {
       const existingRace = await tx.query.races.findFirst({
         where: and(eq(races.id, race.id), eq(races.userId, user.id)),
@@ -351,6 +353,9 @@ export async function updateRaceAction(
           message: "Race not found or you don't have permission to update it",
         };
       }
+
+      // 🔹 Determine if GPX changed
+      shouldParseGpx = !!race.gpx && race.gpx?.path !== existingRace.gpx?.path;
 
       // Update the Race Address
       const addressId = await upsertAddress(
@@ -399,6 +404,12 @@ export async function updateRaceAction(
 
     if (!updatedRace) {
       return { success: false, message: "Failed to fetch updated race" };
+    }
+
+    // 🔹 Trigger GPX parsing if it changed
+    if (shouldParseGpx) {
+      console.log("[updateRaceAction] GPX changed, parsing route...");
+      await parseGpxAndLoadRoute(updatedRace.id);
     }
 
     return {

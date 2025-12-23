@@ -187,6 +187,15 @@ export const runLocations = pgTable("run_locations", {
   timestamp: timestamp("timestamp").notNull(),
 });
 
+export const routePoints = pgTable("route_points", {
+  id: serial("id").primaryKey().notNull(),
+  raceId: integer("race_id").notNull(),
+  lat: doublePrecision("lat").notNull(),
+  lon: doublePrecision("lon").notNull(),
+  pointIndex: integer("point_index").notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+});
+
 // =============================
 // Relations
 // =============================
